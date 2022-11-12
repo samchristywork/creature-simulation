@@ -6,7 +6,7 @@ use rand::Rng;
 pub struct Creature {
     life: i32,
     dead: bool,
-    position: Position,
+    pub position: Position,
     history: Vec<Position>,
 }
 
@@ -46,7 +46,7 @@ impl Creature {
     }
     pub fn display_history(&self) {
         for position in &self.history {
-            println!("{} {}", position.x, position.y);
+            position.read();
         }
     }
 }

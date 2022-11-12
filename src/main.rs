@@ -1,10 +1,11 @@
 pub mod creature;
+pub mod map;
 pub mod plant;
 pub mod position;
 pub mod world;
 
 fn main() {
-    let mut world = world::World::new();
+    let mut world = world::World::new(80, 40);
     world.add_creatures(100);
     world.add_plants(100);
     world.simulate(100);
