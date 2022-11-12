@@ -94,6 +94,7 @@ impl World {
             let backend = CrosstermBackend::new(stdout);
             let mut terminal = Terminal::new(backend).unwrap();
 
+            let mut frame_count = 0;
             for state in states {
                 let mut map = Map::new(self.width, self.height, self.name.to_string());
                 for creature in &state.creatures {
@@ -102,7 +103,8 @@ impl World {
                 for plant in &state.plants {
                     map.set_plant(plant.position);
                 }
-                let cont = terminal_graphics::run(&mut terminal, &map);
+                let cont = terminal_graphics::display(&mut terminal, &map, frame_count);
+                frame_count += 1;
                 if cont == Continuation::Halt {
                     break;
                 }

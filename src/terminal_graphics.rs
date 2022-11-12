@@ -17,7 +17,11 @@ pub enum Continuation {
     Progress,
 }
 
-pub fn run<B: Backend>(terminal: &mut Terminal<B>, map: &map::Map) -> Continuation {
+pub fn display<B: Backend>(
+    terminal: &mut Terminal<B>,
+    map: &map::Map,
+    frame_count: i32,
+) -> Continuation {
     terminal
         .draw(|f| {
             let rect = Rect {
@@ -53,6 +57,14 @@ pub fn run<B: Backend>(terminal: &mut Terminal<B>, map: &map::Map) -> Continuati
                             );
                         }
                     }
+                    ctx.print(
+                        0 as f64,
+                        0 as f64,
+                        Span::styled(
+                            format!("{}", frame_count),
+                            Style::default().fg(Color::Magenta),
+                        ),
+                    );
                 })
                 .x_bounds([rect.x as f64, rect.width as f64])
                 .y_bounds([rect.y as f64, rect.height as f64]);
