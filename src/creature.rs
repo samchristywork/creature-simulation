@@ -29,10 +29,12 @@ impl Creature {
     }
 
     fn random_walk(&mut self) {
-        self.move_relative(
-            rand::thread_rng().gen_range(-1..2),
-            rand::thread_rng().gen_range(-1..2),
-        );
+        if rand::thread_rng().gen_range(0..4) == 0 {
+            self.move_relative(
+                rand::thread_rng().gen_range(-1..2),
+                rand::thread_rng().gen_range(-1..2),
+            );
+        }
     }
 
     fn age(&mut self) {

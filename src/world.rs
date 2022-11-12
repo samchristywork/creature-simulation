@@ -10,6 +10,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::io;
+use std::time::Duration;
 use tui::{backend::CrosstermBackend, Terminal};
 
 use rand::Rng;
@@ -77,7 +78,7 @@ impl World {
         }
     }
 
-    pub fn display_map(&self, mode: DisplayMode, states: &Vec<WorldState>) {
+    pub fn display_map(&self, mode: DisplayMode, states: &[WorldState], frame_delay: Duration) {
         if mode == DisplayMode::TerminalStatic {
             let state = &states[0];
             let mut map = Map::new(self.width, self.height, self.name.to_string());
@@ -103,7 +104,8 @@ impl World {
                 for plant in &state.plants {
                     map.set_plant(plant.position);
                 }
-                let cont = terminal_graphics::display(&mut terminal, &map, frame_count);
+                let cont =
+                    terminal_graphics::display(&mut terminal, &map, frame_count, frame_delay);
                 frame_count += 1;
                 if cont == Continuation::Halt {
                     break;

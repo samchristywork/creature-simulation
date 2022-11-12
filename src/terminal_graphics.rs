@@ -21,6 +21,7 @@ pub fn display<B: Backend>(
     terminal: &mut Terminal<B>,
     map: &map::Map,
     frame_count: i32,
+    frame_delay: Duration,
 ) -> Continuation {
     terminal
         .draw(|f| {
@@ -72,7 +73,7 @@ pub fn display<B: Backend>(
         })
         .unwrap();
 
-    if crossterm::event::poll(Duration::from_millis(100)).unwrap() {
+    if crossterm::event::poll(frame_delay).unwrap() {
         if let Event::Key(key) = event::read().unwrap() {
             if let KeyCode::Esc = key.code {
                 return Continuation::Halt;

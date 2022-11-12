@@ -5,6 +5,8 @@ pub mod position;
 pub mod terminal_graphics;
 pub mod world;
 
+use std::time::Duration;
+
 #[derive(PartialEq)]
 pub enum DisplayMode {
     TerminalStatic,
@@ -17,5 +19,9 @@ fn main() {
     world.add_plants(100);
     world.simulate(100);
 
-    world.display_map(DisplayMode::TerminalDynamic, &world.history);
+    world.display_map(
+        DisplayMode::TerminalDynamic,
+        &world.history[30..],
+        Duration::from_millis(33),
+    );
 }
