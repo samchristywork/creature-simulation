@@ -1,10 +1,12 @@
 use crate::position::Position;
+use crate::terminal_graphics;
+use crate::DisplayMode;
 use colored::Colorize;
 
 pub struct Map {
-    width: i32,
-    height: i32,
-    slots: Vec<Vec<char>>,
+    pub width: i32,
+    pub height: i32,
+    pub slots: Vec<Vec<char>>,
 }
 
 impl Map {
@@ -29,31 +31,35 @@ impl Map {
             }
         }
     }
-    pub fn display(&self) {
-        print!(" ");
-        for _ in 0..self.width {
-            print!("_");
-        }
-        println!();
-        for x in &self.slots {
-            print!("|");
-            for y in x {
-                if y == &'.' {
-                    let s = format!("{}", y).green();
-                    print!("{}", s);
-                } else if y == &'c' {
-                    let s = format!("{}", y).yellow();
-                    print!("{}", s);
-                } else {
-                    print!("{}", y);
-                }
+    pub fn display(&self, mode: DisplayMode) {
+        if mode == DisplayMode::TerminalStatic {
+            print!(" ");
+            for _ in 0..self.width {
+                print!("_");
             }
-            println!("|");
+            println!();
+            for x in &self.slots {
+                print!("|");
+                for y in x {
+                    if y == &'.' {
+                        let s = format!("{}", y).green();
+                        print!("{}", s);
+                    } else if y == &'c' {
+                        let s = format!("{}", y).yellow();
+                        print!("{}", s);
+                    } else {
+                        print!("{}", y);
+                    }
+                }
+                println!("|");
+            }
+            print!(" ");
+            for _ in 0..self.width {
+                print!("_");
+            }
+            println!();
+        } else if mode == DisplayMode::TerminalDynamic {
+            terminal_graphics::display(self);
         }
-        print!(" ");
-        for _ in 0..self.width {
-            print!("_");
-        }
-        println!();
     }
 }

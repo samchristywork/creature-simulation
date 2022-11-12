@@ -2,6 +2,7 @@ use crate::creature::Creature;
 use crate::map::Map;
 use crate::plant::Plant;
 use crate::position::Position;
+use crate::DisplayMode;
 
 use rand::Rng;
 
@@ -47,10 +48,10 @@ impl World {
             creature.step();
         }
     }
-    pub fn display_results(&self) {
-        self.display_map();
+    pub fn display_results(&self, mode: DisplayMode) {
+        self.display_map(mode);
     }
-    pub fn display_map(&self) {
+    pub fn display_map(&self, mode: DisplayMode) {
         let mut map = Map::new(self.width, self.height);
         for creature in &self.creatures {
             map.set_creature(creature.position);
@@ -58,6 +59,6 @@ impl World {
         for plant in &self.plants {
             map.set_plant(plant.position);
         }
-        map.display();
+        map.display(mode);
     }
 }
