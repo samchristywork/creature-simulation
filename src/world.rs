@@ -1,6 +1,9 @@
 use crate::creature::Creature;
 use crate::map::Map;
 use crate::plant::Plant;
+use crate::position::Position;
+
+use rand::Rng;
 
 pub struct World {
     pub name: String,
@@ -28,7 +31,9 @@ impl World {
     }
     pub fn add_plants(&mut self, n: i32) {
         for _ in 0..n {
-            let plant = Plant::new();
+            let x = rand::thread_rng().gen_range(0..self.width);
+            let y = rand::thread_rng().gen_range(0..self.height);
+            let plant = Plant::new(Position::new(x, y));
             self.plants.push(plant);
         }
     }
@@ -49,6 +54,9 @@ impl World {
         let mut map = Map::new(self.width, self.height);
         for creature in &self.creatures {
             map.set_creature(creature.position);
+        }
+        for plant in &self.plants {
+            map.set_plant(plant.position);
         }
         map.display();
     }

@@ -18,6 +18,9 @@ impl Map {
     pub fn set_creature(&mut self, position: Position) {
         self.set_slot(position, 'c');
     }
+    pub fn set_plant(&mut self, position: Position) {
+        self.set_slot(position, '.');
+    }
     fn set_slot(&mut self, position: Position, character: char) {
         if position.x >= 0 && position.x < self.width {
             if position.y >= 0 && position.y < self.height {
