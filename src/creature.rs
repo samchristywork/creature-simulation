@@ -7,7 +7,6 @@ pub struct Creature {
     life: i32,
     dead: bool,
     pub position: Position,
-    history: Vec<Position>,
 }
 
 impl Creature {
@@ -16,7 +15,6 @@ impl Creature {
             life: 100,
             dead: false,
             position: Position::new(x, y),
-            history: Vec::new(),
         }
     }
     pub fn step(&mut self) {
@@ -24,8 +22,6 @@ impl Creature {
         self.random_walk();
     }
     fn move_relative(&mut self, x: i32, y: i32) {
-        let position = Position::new(self.position.x, self.position.y);
-        self.history.push(position);
         self.position.x += x;
         self.position.y += y;
     }
@@ -43,10 +39,5 @@ impl Creature {
     }
     pub fn display_position(&self) {
         println!("{} {}", self.position.x, self.position.y);
-    }
-    pub fn display_history(&self) {
-        for position in &self.history {
-            position.read();
-        }
     }
 }

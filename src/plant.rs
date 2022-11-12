@@ -1,5 +1,6 @@
 use crate::position::Position;
 
+#[derive(Clone)]
 pub struct Plant {
     pub position: Position,
 }

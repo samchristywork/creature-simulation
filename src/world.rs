@@ -6,10 +6,25 @@ use crate::DisplayMode;
 
 use rand::Rng;
 
+#[derive(Clone)]
+pub struct WorldState {
+    pub creatures: Vec<Creature>,
+    pub plants: Vec<Plant>,
+}
+
+impl WorldState {
+    pub fn new() -> Self {
+        Self {
+            creatures: Vec::new(),
+            plants: Vec::new(),
+        }
+    }
+}
+
 pub struct World {
     pub name: String,
-    creatures: Vec<Creature>,
-    plants: Vec<Plant>,
+    pub history: Vec<WorldState>,
+    pub current_state: WorldState,
     width: i32,
     height: i32,
 }
@@ -18,8 +33,8 @@ impl World {
     pub fn new(width: i32, height: i32) -> Self {
         Self {
             name: "hi".to_string(),
-            creatures: Vec::new(),
-            plants: Vec::new(),
+            history: Vec::new(),
+            current_state: WorldState::new(),
             width,
             height,
         }
@@ -27,7 +42,7 @@ impl World {
     pub fn add_creatures(&mut self, n: i32) {
         for _ in 0..n {
             let creature = Creature::new(self.width / 2, self.height / 2);
-            self.creatures.push(creature);
+            self.current_state.creatures.push(creature);
         }
     }
     pub fn add_plants(&mut self, n: i32) {
@@ -35,7 +50,7 @@ impl World {
             let x = rand::thread_rng().gen_range(0..self.width);
             let y = rand::thread_rng().gen_range(0..self.height);
             let plant = Plant::new(Position::new(x, y));
-            self.plants.push(plant);
+            self.current_state.plants.push(plant);
         }
     }
     pub fn simulate(&mut self, n: i32) {
@@ -44,19 +59,20 @@ impl World {
         }
     }
     fn step(&mut self) {
-        for creature in self.creatures.iter_mut() {
+        self.history.push(self.current_state.clone());
+        for creature in self.current_state.creatures.iter_mut() {
             creature.step();
         }
     }
-    pub fn display_results(&self, mode: DisplayMode) {
-        self.display_map(mode);
+    pub fn display_results(&self, mode: DisplayMode, state: &WorldState) {
+        self.display_map(mode, state);
     }
-    pub fn display_map(&self, mode: DisplayMode) {
+    pub fn display_map(&self, mode: DisplayMode, state: &WorldState) {
         let mut map = Map::new(self.width, self.height);
-        for creature in &self.creatures {
+        for creature in &state.creatures {
             map.set_creature(creature.position);
         }
-        for plant in &self.plants {
+        for plant in &state.plants {
             map.set_plant(plant.position);
         }
         map.display(mode);
