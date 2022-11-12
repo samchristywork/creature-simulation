@@ -33,11 +33,26 @@ fn run<B: Backend>(terminal: &mut Terminal<B>, map: &map::Map) {
                 let canvas = Canvas::default()
                     .block(Block::default().borders(Borders::ALL).title("Map"))
                     .paint(|ctx| {
-                        ctx.print(
-                            10.0,
-                            10.0,
-                            Span::styled("You are here", Style::default().fg(Color::Yellow)),
-                        );
+                        for x in 0..map.width {
+                            for y in 0..map.height {
+                                let mut tmp = [0];
+                                let color = match map.slots[y as usize][x as usize] {
+                                    'c' => Color::Yellow,
+                                    '.' => Color::Green,
+                                    _ => Color::Reset,
+                                };
+                                ctx.print(
+                                    x as f64,
+                                    y as f64,
+                                    Span::styled(
+                                        String::new()
+                                            + map.slots[y as usize][x as usize]
+                                                .encode_utf8(&mut tmp),
+                                        Style::default().fg(color),
+                                    ),
+                                );
+                            }
+                        }
                     })
                     .x_bounds([rect.x as f64, rect.width as f64])
                     .y_bounds([rect.y as f64, rect.height as f64]);
