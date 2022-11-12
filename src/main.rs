@@ -12,9 +12,9 @@ pub enum DisplayMode {
 }
 
 fn main() {
-    let mut world = world::World::new(80, 30);
+    let mut world = world::World::new(80, 30, "World".to_string());
     world.add_creatures(100);
     world.add_plants(100);
-    world.simulate(10);
+    world.simulate(100);
     world.display_map(DisplayMode::TerminalDynamic, &world.history);
 }

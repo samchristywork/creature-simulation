@@ -3,6 +3,7 @@ use crate::map::Map;
 use crate::plant::Plant;
 use crate::position::Position;
 use crate::terminal_graphics;
+use crate::terminal_graphics::Continuation;
 use crate::DisplayMode;
 use crossterm::{
     execute,
@@ -37,9 +38,9 @@ pub struct World {
 }
 
 impl World {
-    pub fn new(width: i32, height: i32) -> Self {
+    pub fn new(width: i32, height: i32, name: String) -> Self {
         Self {
-            name: "hi".to_string(),
+            name,
             history: Vec::new(),
             current_state: WorldState::new(),
             width,
@@ -79,7 +80,7 @@ impl World {
     pub fn display_map(&self, mode: DisplayMode, states: &Vec<WorldState>) {
         if mode == DisplayMode::TerminalStatic {
             let state = &states[0];
-            let mut map = Map::new(self.width, self.height);
+            let mut map = Map::new(self.width, self.height, self.name.to_string());
             for creature in &state.creatures {
                 map.set_creature(creature.position);
             }
@@ -94,14 +95,17 @@ impl World {
             let mut terminal = Terminal::new(backend).unwrap();
 
             for state in states {
-                let mut map = Map::new(self.width, self.height);
+                let mut map = Map::new(self.width, self.height, self.name.to_string());
                 for creature in &state.creatures {
                     map.set_creature(creature.position);
                 }
                 for plant in &state.plants {
                     map.set_plant(plant.position);
                 }
-                terminal_graphics::run(&mut terminal, &map);
+                let cont = terminal_graphics::run(&mut terminal, &map);
+                if cont == Continuation::Halt {
+                    break;
+                }
             }
 
             disable_raw_mode().unwrap();

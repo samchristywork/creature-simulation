@@ -5,15 +5,17 @@ pub struct Map {
     pub width: i32,
     pub height: i32,
     pub slots: Vec<Vec<char>>,
+    pub name: String,
 }
 
 impl Map {
-    pub fn new(width: i32, height: i32) -> Self {
+    pub fn new(width: i32, height: i32, name: String) -> Self {
         let slots = vec![vec![' '; width.try_into().unwrap()]; height.try_into().unwrap()];
         Self {
             width,
             height,
             slots,
+            name,
         }
     }
 
