@@ -1,16 +1,9 @@
 use crate::map;
 
-use crossterm::{
-    event::{self, Event, KeyCode},
-    execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-};
-use std::{
-    io,
-    time::{Duration, Instant},
-};
+use crossterm::event::{self, Event, KeyCode};
+use std::time::{Duration, Instant};
 use tui::{
-    backend::{Backend, CrosstermBackend},
+    backend::Backend,
     layout::Rect,
     style::{Color, Style},
     text::Span,
@@ -18,7 +11,7 @@ use tui::{
     Terminal,
 };
 
-fn run<B: Backend>(terminal: &mut Terminal<B>, map: &map::Map) {
+pub fn run<B: Backend>(terminal: &mut Terminal<B>, map: &map::Map) {
     let mut last_tick = Instant::now();
     loop {
         terminal
@@ -75,21 +68,4 @@ fn run<B: Backend>(terminal: &mut Terminal<B>, map: &map::Map) {
             last_tick = Instant::now();
         }
     }
-}
-
-pub fn display(map: &map::Map) {
-    // Init
-    enable_raw_mode().unwrap();
-    let mut stdout = io::stdout();
-    execute!(stdout, EnterAlternateScreen).unwrap();
-    let backend = CrosstermBackend::new(stdout);
-    let mut terminal = Terminal::new(backend).unwrap();
-
-    // Run
-    run(&mut terminal, map);
-
-    // Cleanup
-    disable_raw_mode().unwrap();
-    execute!(terminal.backend_mut(), LeaveAlternateScreen).unwrap();
-    terminal.show_cursor().unwrap();
 }

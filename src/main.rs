@@ -16,5 +16,5 @@ fn main() {
     world.add_creatures(100);
     world.add_plants(100);
     world.simulate(10);
-    world.display_results(DisplayMode::TerminalDynamic, &world.history[5]);
+    world.display_map(DisplayMode::TerminalDynamic, &world.history);
 }

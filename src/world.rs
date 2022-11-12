@@ -2,7 +2,14 @@ use crate::creature::Creature;
 use crate::map::Map;
 use crate::plant::Plant;
 use crate::position::Position;
+use crate::terminal_graphics;
 use crate::DisplayMode;
+use crossterm::{
+    execute,
+    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+};
+use std::io;
+use tui::{backend::CrosstermBackend, Terminal};
 
 use rand::Rng;
 
@@ -39,12 +46,14 @@ impl World {
             height,
         }
     }
+
     pub fn add_creatures(&mut self, n: i32) {
         for _ in 0..n {
             let creature = Creature::new(self.width / 2, self.height / 2);
             self.current_state.creatures.push(creature);
         }
     }
+
     pub fn add_plants(&mut self, n: i32) {
         for _ in 0..n {
             let x = rand::thread_rng().gen_range(0..self.width);
@@ -53,28 +62,51 @@ impl World {
             self.current_state.plants.push(plant);
         }
     }
+
     pub fn simulate(&mut self, n: i32) {
         for _ in 0..n {
             self.step();
         }
     }
+
     fn step(&mut self) {
         self.history.push(self.current_state.clone());
         for creature in self.current_state.creatures.iter_mut() {
             creature.step();
         }
     }
-    pub fn display_results(&self, mode: DisplayMode, state: &WorldState) {
-        self.display_map(mode, state);
-    }
-    pub fn display_map(&self, mode: DisplayMode, state: &WorldState) {
-        let mut map = Map::new(self.width, self.height);
-        for creature in &state.creatures {
-            map.set_creature(creature.position);
+
+    pub fn display_map(&self, mode: DisplayMode, states: &Vec<WorldState>) {
+        if mode == DisplayMode::TerminalStatic {
+            let state = &states[0];
+            let mut map = Map::new(self.width, self.height);
+            for creature in &state.creatures {
+                map.set_creature(creature.position);
+            }
+            for plant in &state.plants {
+                map.set_plant(plant.position);
+            }
+        } else if mode == DisplayMode::TerminalDynamic {
+            enable_raw_mode().unwrap();
+            let mut stdout = io::stdout();
+            execute!(stdout, EnterAlternateScreen).unwrap();
+            let backend = CrosstermBackend::new(stdout);
+            let mut terminal = Terminal::new(backend).unwrap();
+
+            for state in states {
+                let mut map = Map::new(self.width, self.height);
+                for creature in &state.creatures {
+                    map.set_creature(creature.position);
+                }
+                for plant in &state.plants {
+                    map.set_plant(plant.position);
+                }
+                terminal_graphics::run(&mut terminal, &map);
+            }
+
+            disable_raw_mode().unwrap();
+            execute!(terminal.backend_mut(), LeaveAlternateScreen).unwrap();
+            terminal.show_cursor().unwrap();
         }
-        for plant in &state.plants {
-            map.set_plant(plant.position);
-        }
-        map.display(mode);
     }
 }

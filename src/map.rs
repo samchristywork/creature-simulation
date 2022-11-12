@@ -1,6 +1,4 @@
 use crate::position::Position;
-use crate::terminal_graphics;
-use crate::DisplayMode;
 use colored::Colorize;
 
 pub struct Map {
@@ -18,12 +16,15 @@ impl Map {
             slots,
         }
     }
+
     pub fn set_creature(&mut self, position: Position) {
         self.set_slot(position, 'c');
     }
+
     pub fn set_plant(&mut self, position: Position) {
         self.set_slot(position, '.');
     }
+
     fn set_slot(&mut self, position: Position, character: char) {
         if position.x >= 0 && position.x < self.width {
             if position.y >= 0 && position.y < self.height {
@@ -31,35 +32,32 @@ impl Map {
             }
         }
     }
-    pub fn display(&self, mode: DisplayMode) {
-        if mode == DisplayMode::TerminalStatic {
-            print!(" ");
-            for _ in 0..self.width {
-                print!("_");
-            }
-            println!();
-            for x in &self.slots {
-                print!("|");
-                for y in x {
-                    if y == &'.' {
-                        let s = format!("{}", y).green();
-                        print!("{}", s);
-                    } else if y == &'c' {
-                        let s = format!("{}", y).yellow();
-                        print!("{}", s);
-                    } else {
-                        print!("{}", y);
-                    }
-                }
-                println!("|");
-            }
-            print!(" ");
-            for _ in 0..self.width {
-                print!("_");
-            }
-            println!();
-        } else if mode == DisplayMode::TerminalDynamic {
-            terminal_graphics::display(self);
+
+    pub fn display(&self) {
+        print!(" ");
+        for _ in 0..self.width {
+            print!("_");
         }
+        println!();
+        for x in &self.slots {
+            print!("|");
+            for y in x {
+                if y == &'.' {
+                    let s = format!("{}", y).green();
+                    print!("{}", s);
+                } else if y == &'c' {
+                    let s = format!("{}", y).yellow();
+                    print!("{}", s);
+                } else {
+                    print!("{}", y);
+                }
+            }
+            println!("|");
+        }
+        print!(" ");
+        for _ in 0..self.width {
+            print!("_");
+        }
+        println!();
     }
 }
