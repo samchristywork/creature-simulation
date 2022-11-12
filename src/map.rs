@@ -1,4 +1,5 @@
 use crate::position::Position;
+use colored::Colorize;
 
 pub struct Map {
     width: i32,
@@ -37,7 +38,15 @@ impl Map {
         for x in &self.slots {
             print!("|");
             for y in x {
-                print!("{}", y);
+                if y == &'.' {
+                    let s = format!("{}", y).green();
+                    print!("{}", s);
+                } else if y == &'c' {
+                    let s = format!("{}", y).yellow();
+                    print!("{}", s);
+                } else {
+                    print!("{}", y);
+                }
             }
             println!("|");
         }
