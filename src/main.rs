@@ -21,7 +21,7 @@ fn main() {
 
     world.display_map(
         DisplayMode::TerminalDynamic,
-        &world.history[30..],
-        Duration::from_millis(33),
+        &world.history[0..],
+        Duration::from_millis(100),
     );
 }
