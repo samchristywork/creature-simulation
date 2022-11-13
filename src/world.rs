@@ -74,20 +74,21 @@ impl World {
     fn step(&mut self) {
         self.history.push(self.current_state.clone());
         for creature in self.current_state.creatures.iter_mut() {
-            creature.step();
+            creature.step(&self.current_state.plants);
         }
     }
 
     pub fn display_map(&self, mode: DisplayMode, states: &[WorldState], frame_delay: Duration) {
         if mode == DisplayMode::TerminalStatic {
-            let state = &states[0];
+            let state = &states[states.len() - 1];
             let mut map = Map::new(self.width, self.height, self.name.to_string());
             for creature in &state.creatures {
-                map.set_creature(creature.position);
+                map.set_creature(creature.position, creature.direction, creature.life);
             }
             for plant in &state.plants {
                 map.set_plant(plant.position);
             }
+            map.display();
         } else if mode == DisplayMode::TerminalDynamic {
             enable_raw_mode().unwrap();
             let mut stdout = io::stdout();
@@ -99,7 +100,7 @@ impl World {
             for state in states {
                 let mut map = Map::new(self.width, self.height, self.name.to_string());
                 for creature in &state.creatures {
-                    map.set_creature(creature.position);
+                    map.set_creature(creature.position, creature.direction, creature.life);
                 }
                 for plant in &state.plants {
                     map.set_plant(plant.position);

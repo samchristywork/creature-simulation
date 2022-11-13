@@ -42,17 +42,18 @@ pub fn display<B: Backend>(
                     for x in 0..map.width {
                         for y in 0..map.height {
                             let mut tmp = [0];
-                            let color = match map.slots[y as usize][x as usize] {
-                                'c' => Color::Yellow,
+                            let shade = map.slots[y as usize][x as usize].1 as u8;
+                            let color = match map.slots[y as usize][x as usize].0 {
                                 '.' => Color::Green,
-                                _ => Color::Reset,
+                                ' ' => Color::Reset,
+                                _ => Color::Rgb(shade, shade, shade),
                             };
                             ctx.print(
                                 x as f64,
                                 y as f64,
                                 Span::styled(
                                     String::new()
-                                        + map.slots[y as usize][x as usize].encode_utf8(&mut tmp),
+                                        + map.slots[y as usize][x as usize].0.encode_utf8(&mut tmp),
                                     Style::default().fg(color),
                                 ),
                             );

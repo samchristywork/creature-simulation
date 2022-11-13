@@ -21,7 +21,7 @@ pub enum Direction {
 
 #[derive(Clone, Copy)]
 pub struct Creature {
-    life: i32,
+    pub life: i32,
     dead: bool,
     pub direction: Direction,
     pub position: Position,
@@ -107,13 +107,12 @@ impl Creature {
     }
 
     fn age(&mut self) {
-        self.life -= 1;
-        if self.life <= 0 {
+        let n = 2;
+        if self.life < n {
+            self.life = 0;
             self.dead = true;
+            return;
         }
-    }
-
-    pub fn display_position(&self) {
-        println!("{} {}", self.position.x, self.position.y);
+        self.life -= n;
     }
 }
