@@ -70,7 +70,7 @@ pub fn display<B: Backend>(
                 })
                 .x_bounds([rect.x as f64, rect.width as f64])
                 .y_bounds([rect.y as f64, rect.height as f64]);
-            f.render_widget(canvas, rect);
+            f.render_widget(canvas, f.size());
         })
         .unwrap();
 
