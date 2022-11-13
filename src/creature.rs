@@ -1,16 +1,28 @@
 use crate::genome::Genome;
 use crate::plant::Plant;
 use crate::position::Position;
-
 use rand::seq::SliceRandom;
 use rand::Rng;
+use std::slice::Iter;
 
-#[derive(Clone, Copy)]
-enum Action {
+#[derive(Clone, Copy, Debug)]
+pub enum Action {
     TurnLeft,
     TurnRight,
     MoveForward,
     RandomWalk,
+}
+
+impl Action {
+    pub fn iterator() -> Iter<'static, Action> {
+        static ACTION: [Action; 4] = [
+            Action::TurnLeft,
+            Action::TurnRight,
+            Action::MoveForward,
+            Action::RandomWalk,
+        ];
+        ACTION.iter()
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -80,12 +92,7 @@ impl Creature {
                     self.life = 255;
                 }
             }
-            let actions = vec![
-                Action::TurnLeft,
-                Action::TurnRight,
-                Action::MoveForward,
-                Action::RandomWalk,
-            ];
+            let actions = Action::iterator().as_slice();
             match *actions.choose(&mut rand::thread_rng()).unwrap() {
                 Action::MoveForward => self.move_forward(),
                 Action::TurnLeft => self.turn_left(),
