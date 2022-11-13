@@ -46,6 +46,7 @@ pub fn display<B: Backend>(
                             let color = match map.slots[y as usize][x as usize].0 {
                                 '.' => Color::Green,
                                 ' ' => Color::Reset,
+                                'x' => Color::Rgb(10, 10, 10),
                                 _ => Color::Rgb(shade, shade, shade),
                             };
                             ctx.print(

@@ -1,4 +1,5 @@
 pub mod creature;
+pub mod genome;
 pub mod map;
 pub mod plant;
 pub mod position;

@@ -1,3 +1,4 @@
+use crate::genome::Genome;
 use crate::plant::Plant;
 use crate::position::Position;
 
@@ -23,9 +24,9 @@ pub enum Direction {
 #[derive(Clone, Copy)]
 pub struct Creature {
     pub life: i32,
-    dead: bool,
     pub direction: Direction,
     pub position: Position,
+    genome: Genome,
 }
 
 impl Creature {
@@ -39,9 +40,9 @@ impl Creature {
         let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
         Self {
             life: 255,
-            dead: false,
             position: Position::new(x, y),
             direction,
+            genome: Genome::new(),
         }
     }
 
@@ -73,24 +74,26 @@ impl Creature {
     }
 
     pub fn step(&mut self, plants: &[Plant]) {
-        for plant in plants {
-            if plant.position == self.position {
-                self.life = 255;
+        if self.life > 0 {
+            for plant in plants {
+                if plant.position == self.position {
+                    self.life = 255;
+                }
             }
+            let actions = vec![
+                Action::TurnLeft,
+                Action::TurnRight,
+                Action::MoveForward,
+                Action::RandomWalk,
+            ];
+            match *actions.choose(&mut rand::thread_rng()).unwrap() {
+                Action::MoveForward => self.move_forward(),
+                Action::TurnLeft => self.turn_left(),
+                Action::TurnRight => self.turn_right(),
+                Action::RandomWalk => self.random_walk(),
+            }
+            self.age();
         }
-        let actions = vec![
-            Action::TurnLeft,
-            Action::TurnRight,
-            Action::MoveForward,
-            Action::RandomWalk,
-        ];
-        match *actions.choose(&mut rand::thread_rng()).unwrap() {
-            Action::MoveForward => self.move_forward(),
-            Action::TurnLeft => self.turn_left(),
-            Action::TurnRight => self.turn_right(),
-            Action::RandomWalk => self.random_walk(),
-        }
-        self.age();
     }
 
     fn move_relative(&mut self, x: i32, y: i32) {
@@ -108,10 +111,9 @@ impl Creature {
     }
 
     fn age(&mut self) {
-        let n = 2;
+        let n = self.genome.aging_speed;
         if self.life < n {
             self.life = 0;
-            self.dead = true;
             return;
         }
         self.life -= n;

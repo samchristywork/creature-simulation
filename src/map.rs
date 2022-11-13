@@ -21,6 +21,10 @@ impl Map {
     }
 
     pub fn set_creature(&mut self, position: Position, direction: Direction, life: i32) {
+        if life == 0 {
+            self.set_slot(position, 'x', 0);
+            return;
+        }
         match direction {
             Direction::North => self.set_slot(position, '^', life),
             Direction::South => self.set_slot(position, 'v', life),
