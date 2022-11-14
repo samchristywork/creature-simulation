@@ -40,10 +40,11 @@ pub struct Creature {
     pub position: Position,
     genome: Genome,
     program_counter: usize,
+    pub world_bounds: Position,
 }
 
 impl Creature {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub fn new(x: i32, y: i32, world_bounds: Position) -> Self {
         let directions = vec![
             Direction::North,
             Direction::South,
@@ -57,6 +58,7 @@ impl Creature {
             direction,
             genome: Genome::new(),
             program_counter: 0,
+            world_bounds,
         }
     }
 
@@ -112,6 +114,19 @@ impl Creature {
     fn move_relative(&mut self, x: i32, y: i32) {
         self.position.x += x;
         self.position.y += y;
+
+        if self.position.x > self.world_bounds.x {
+            self.position.x = 0;
+        }
+        if self.position.y > self.world_bounds.y {
+            self.position.y = 0;
+        }
+        if self.position.x < 0 {
+            self.position.x = self.world_bounds.y;
+        }
+        if self.position.y < 0 {
+            self.position.y = self.world_bounds.y;
+        }
     }
 
     fn random_walk(&mut self) {

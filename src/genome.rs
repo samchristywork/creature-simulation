@@ -19,8 +19,8 @@ impl Behavior {
 #[derive(Clone, Copy)]
 pub struct Genome {
     pub aging_speed: i32,
-    eating_efficiency: f32,
-    behavior: Behavior,
+    pub eating_efficiency: f32,
+    pub behavior: Behavior,
 }
 
 impl Genome {
