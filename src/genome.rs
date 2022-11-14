@@ -3,8 +3,8 @@ use rand::seq::SliceRandom;
 use rand::Rng;
 
 #[derive(Clone, Copy)]
-struct Behavior {
-    action_pattern: [Action; 10],
+pub struct Behavior {
+    pub action_pattern: [Action; 10],
 }
 
 impl Behavior {

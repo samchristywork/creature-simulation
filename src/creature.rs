@@ -39,6 +39,7 @@ pub struct Creature {
     pub direction: Direction,
     pub position: Position,
     genome: Genome,
+    program_counter: usize,
 }
 
 impl Creature {
@@ -55,6 +56,7 @@ impl Creature {
             position: Position::new(x, y),
             direction,
             genome: Genome::new(),
+            program_counter: 0,
         }
     }
 
@@ -92,12 +94,16 @@ impl Creature {
                     self.life = 255;
                 }
             }
-            let actions = Action::iterator().as_slice();
-            match *actions.choose(&mut rand::thread_rng()).unwrap() {
+            let action = self.genome.behavior.action_pattern[self.program_counter];
+            match action {
                 Action::MoveForward => self.move_forward(),
                 Action::TurnLeft => self.turn_left(),
                 Action::TurnRight => self.turn_right(),
                 Action::RandomWalk => self.random_walk(),
+            }
+            self.program_counter += 1;
+            if self.program_counter > 9 {
+                self.program_counter = 0;
             }
             self.age();
         }
