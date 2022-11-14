@@ -4,6 +4,11 @@ use crossterm::event::{self, Event, KeyCode};
 use std::time::Duration;
 use tui::{
     backend::Backend,
+    style::Modifier,
+    text::Spans,
+    widgets::{Paragraph, Wrap},
+};
+use tui::{
     layout::Rect,
     style::{Color, Style},
     text::Span,
@@ -96,6 +101,21 @@ pub fn display<B: Backend>(
             size.width = std::cmp::min(map.width as u16, size.width);
             size.height = std::cmp::min(map.height as u16, size.height);
             f.render_widget(canvas, size);
+
+            let text = vec![
+                Spans::from(format!("{}", cursor.x)),
+                Spans::from(format!("{}", cursor.y)),
+            ];
+            let p = Paragraph::new(text)
+                .block(Block::default().title("Info").borders(Borders::ALL))
+                .wrap(Wrap { trim: true });
+
+            if f.size().height - size.height > 10 {
+                size.y = size.height;
+                size.height = 10;
+                size.x = 0;
+                f.render_widget(p, size);
+            }
         })
         .unwrap();
 
