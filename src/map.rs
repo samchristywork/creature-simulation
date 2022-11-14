@@ -22,9 +22,7 @@ impl Map {
 
     pub fn set_creature(&mut self, position: Position, direction: Direction, life: i32) {
         if life == 0 {
-            if self.get_slot(position).0 == ' ' {
-                self.set_slot(position, 'x', 0);
-            }
+            self.set_slot(position, 'x', 1);
             return;
         }
         match direction {
@@ -36,7 +34,7 @@ impl Map {
     }
 
     pub fn set_plant(&mut self, position: Position) {
-        self.set_slot(position, '.', 0);
+        self.set_slot(position, '.', 2);
     }
 
     fn get_slot(&mut self, position: Position) -> (char, i32) {
@@ -51,7 +49,10 @@ impl Map {
     fn set_slot(&mut self, position: Position, character: char, life: i32) {
         if position.x >= 0 && position.x < self.width {
             if position.y >= 0 && position.y < self.height {
-                self.slots[position.y as usize][position.x as usize] = (character, life);
+                let curr = self.get_slot(position).1;
+                if life > curr {
+                    self.slots[position.y as usize][position.x as usize] = (character, life);
+                }
             }
         }
     }

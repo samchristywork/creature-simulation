@@ -86,11 +86,11 @@ impl World {
         if mode == DisplayMode::TerminalStatic {
             let state = &states[states.len() - 1];
             let mut map = Map::new(self.width, self.height, self.name.to_string());
-            for creature in &state.creatures {
-                map.set_creature(creature.position, creature.direction, creature.life);
-            }
             for plant in &state.plants {
                 map.set_plant(plant.position);
+            }
+            for creature in &state.creatures {
+                map.set_creature(creature.position, creature.direction, creature.life);
             }
             map.display();
         } else if mode == DisplayMode::TerminalDynamic {
