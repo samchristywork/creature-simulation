@@ -3,7 +3,8 @@ use crate::map::Map;
 use crate::plant::Plant;
 use crate::position::Position;
 use crate::terminal_graphics;
-use crate::terminal_graphics::Continuation;
+use crate::terminal_graphics::Cursor;
+use crate::terminal_graphics::Interaction;
 use crate::DisplayMode;
 use crossterm::{
     execute,
@@ -102,6 +103,11 @@ impl World {
 
             let mut frame_count = 0;
             let mut is_paused = false;
+            let mut cursor = Cursor {
+                show: true,
+                x: self.width / 2,
+                y: self.height / 2,
+            };
             loop {
                 let mut map = Map::new(self.width, self.height, self.name.to_string());
                 for creature in &states[frame_count].creatures {
@@ -110,21 +116,42 @@ impl World {
                 for plant in &states[frame_count].plants {
                     map.set_plant(plant.position);
                 }
-                match terminal_graphics::display(&mut terminal, &map, frame_count, frame_delay) {
-                    Continuation::Halt => break,
-                    Continuation::Progress => {
+                cursor.show = is_paused;
+                match terminal_graphics::display(
+                    &mut terminal,
+                    &map,
+                    frame_count,
+                    frame_delay,
+                    &cursor,
+                ) {
+                    Interaction::Halt => break,
+                    Interaction::Progress => {
                         if !is_paused {
                             frame_count += 1;
                         }
                     }
-                    Continuation::Pause => {
+                    Interaction::Pause => {
                         is_paused = !is_paused;
                     }
-                    Continuation::Back => {
-                        frame_count -= 1;
+                    Interaction::Back => {
+                        if frame_count > 0 {
+                            frame_count -= 1;
+                        }
                     }
-                    Continuation::Forward => {
+                    Interaction::Forward => {
                         frame_count += 1;
+                    }
+                    Interaction::Up => {
+                        cursor.y += 1;
+                    }
+                    Interaction::Down => {
+                        cursor.y -= 1;
+                    }
+                    Interaction::Left => {
+                        cursor.x -= 1;
+                    }
+                    Interaction::Right => {
+                        cursor.x += 1;
                     }
                 }
                 if frame_count == states.len() {

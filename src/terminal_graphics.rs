@@ -12,12 +12,22 @@ use tui::{
 };
 
 #[derive(PartialEq)]
-pub enum Continuation {
-    Halt,
-    Progress,
-    Pause,
+pub enum Interaction {
     Back,
+    Down,
     Forward,
+    Halt,
+    Left,
+    Pause,
+    Progress,
+    Right,
+    Up,
+}
+
+pub struct Cursor {
+    pub show: bool,
+    pub x: i32,
+    pub y: i32,
 }
 
 pub fn display<B: Backend>(
@@ -25,7 +35,8 @@ pub fn display<B: Backend>(
     map: &map::Map,
     frame_count: usize,
     frame_delay: Duration,
-) -> Continuation {
+    cursor: &Cursor,
+) -> Interaction {
     terminal
         .draw(|f| {
             let rect = Rect {
@@ -71,6 +82,13 @@ pub fn display<B: Backend>(
                             Style::default().fg(Color::Magenta),
                         ),
                     );
+                    if cursor.show {
+                        ctx.print(
+                            cursor.x as f64,
+                            cursor.y as f64,
+                            Span::styled(format!("X"), Style::default().fg(Color::Yellow)),
+                        );
+                    }
                 })
                 .x_bounds([rect.x as f64, rect.width as f64])
                 .y_bounds([rect.y as f64, rect.height as f64]);
@@ -83,19 +101,19 @@ pub fn display<B: Backend>(
 
     if crossterm::event::poll(frame_delay).unwrap() {
         if let Event::Key(key) = event::read().unwrap() {
-            if let KeyCode::Esc = key.code {
-                return Continuation::Halt;
-            }
-            if let KeyCode::Char('p') = key.code {
-                return Continuation::Pause;
-            }
-            if let KeyCode::Left = key.code {
-                return Continuation::Back;
-            }
-            if let KeyCode::Right = key.code {
-                return Continuation::Forward;
+            match key.code {
+                KeyCode::Esc => return Interaction::Halt,
+                KeyCode::Char('p') => return Interaction::Pause,
+                KeyCode::Char(' ') => return Interaction::Pause,
+                KeyCode::Char(',') => return Interaction::Back,
+                KeyCode::Char('.') => return Interaction::Forward,
+                KeyCode::Up => return Interaction::Up,
+                KeyCode::Down => return Interaction::Down,
+                KeyCode::Left => return Interaction::Left,
+                KeyCode::Right => return Interaction::Right,
+                key => println!("Not handled: {:?}", key),
             }
         }
     }
-    return Continuation::Progress;
+    return Interaction::Progress;
 }

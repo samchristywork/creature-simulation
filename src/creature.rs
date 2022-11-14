@@ -7,19 +7,19 @@ use std::slice::Iter;
 
 #[derive(Clone, Copy, Debug)]
 pub enum Action {
-    TurnLeft,
-    TurnRight,
     MoveForward,
-    RandomWalk,
+    TurnLeft,
+    TurnRandom,
+    TurnRight,
 }
 
 impl Action {
     pub fn iterator() -> Iter<'static, Action> {
         static ACTION: [Action; 4] = [
-            Action::TurnLeft,
-            Action::TurnRight,
             Action::MoveForward,
-            Action::RandomWalk,
+            Action::TurnLeft,
+            Action::TurnRandom,
+            Action::TurnRight,
         ];
         ACTION.iter()
     }
@@ -100,8 +100,8 @@ impl Creature {
             match action {
                 Action::MoveForward => self.move_forward(),
                 Action::TurnLeft => self.turn_left(),
+                Action::TurnRandom => self.random_turn(),
                 Action::TurnRight => self.turn_right(),
-                Action::RandomWalk => self.random_walk(),
             }
             self.program_counter += 1;
             if self.program_counter > 9 {
@@ -129,12 +129,11 @@ impl Creature {
         }
     }
 
-    fn random_walk(&mut self) {
-        if rand::thread_rng().gen_range(0..4) == 0 {
-            self.move_relative(
-                rand::thread_rng().gen_range(-1..2),
-                rand::thread_rng().gen_range(-1..2),
-            );
+    fn random_turn(&mut self) {
+        if rand::thread_rng().gen_range(0..2) == 0 {
+            self.turn_right();
+        } else {
+            self.turn_left();
         }
     }
 
