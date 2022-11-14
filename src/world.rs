@@ -127,6 +127,9 @@ impl World {
                         frame_count += 1;
                     }
                 }
+                if frame_count == states.len() {
+                    frame_count = 0;
+                }
             }
 
             disable_raw_mode().unwrap();
