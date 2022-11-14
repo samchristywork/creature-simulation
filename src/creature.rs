@@ -111,18 +111,18 @@ impl Creature {
         }
     }
 
-    fn move_relative(&mut self, x: i32, y: i32) {
+    pub fn move_relative(&mut self, x: i32, y: i32) {
         self.position.x += x;
         self.position.y += y;
 
         if self.position.x > self.world_bounds.x {
             self.position.x = 0;
         }
+        if self.position.x < 0 {
+            self.position.x = self.world_bounds.x;
+        }
         if self.position.y > self.world_bounds.y {
             self.position.y = 0;
-        }
-        if self.position.x < 0 {
-            self.position.x = self.world_bounds.y;
         }
         if self.position.y < 0 {
             self.position.y = self.world_bounds.y;
