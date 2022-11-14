@@ -101,19 +101,31 @@ impl World {
             let mut terminal = Terminal::new(backend).unwrap();
 
             let mut frame_count = 0;
-            for state in states {
+            let mut is_paused = false;
+            loop {
                 let mut map = Map::new(self.width, self.height, self.name.to_string());
-                for creature in &state.creatures {
+                for creature in &states[frame_count].creatures {
                     map.set_creature(creature.position, creature.direction, creature.life);
                 }
-                for plant in &state.plants {
+                for plant in &states[frame_count].plants {
                     map.set_plant(plant.position);
                 }
-                let cont =
-                    terminal_graphics::display(&mut terminal, &map, frame_count, frame_delay);
-                frame_count += 1;
-                if cont == Continuation::Halt {
-                    break;
+                match terminal_graphics::display(&mut terminal, &map, frame_count, frame_delay) {
+                    Continuation::Halt => break,
+                    Continuation::Progress => {
+                        if !is_paused {
+                            frame_count += 1;
+                        }
+                    }
+                    Continuation::Pause => {
+                        is_paused = !is_paused;
+                    }
+                    Continuation::Back => {
+                        frame_count -= 1;
+                    }
+                    Continuation::Forward => {
+                        frame_count += 1;
+                    }
                 }
             }
 

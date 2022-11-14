@@ -15,12 +15,15 @@ use tui::{
 pub enum Continuation {
     Halt,
     Progress,
+    Pause,
+    Back,
+    Forward,
 }
 
 pub fn display<B: Backend>(
     terminal: &mut Terminal<B>,
     map: &map::Map,
-    frame_count: i32,
+    frame_count: usize,
     frame_delay: Duration,
 ) -> Continuation {
     terminal
@@ -82,6 +85,15 @@ pub fn display<B: Backend>(
         if let Event::Key(key) = event::read().unwrap() {
             if let KeyCode::Esc = key.code {
                 return Continuation::Halt;
+            }
+            if let KeyCode::Char('p') = key.code {
+                return Continuation::Pause;
+            }
+            if let KeyCode::Left = key.code {
+                return Continuation::Back;
+            }
+            if let KeyCode::Right = key.code {
+                return Continuation::Forward;
             }
         }
     }
