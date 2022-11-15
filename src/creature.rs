@@ -35,7 +35,7 @@ pub enum Direction {
 
 #[derive(Clone, Copy)]
 pub struct Creature {
-    pub life: i32,
+    pub life: f64,
     pub direction: Direction,
     pub position: Position,
     genome: Genome,
@@ -53,7 +53,7 @@ impl Creature {
         ];
         let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
         Self {
-            life: 255,
+            life: 255.0,
             position: Position::new(x, y),
             direction,
             genome: Genome::new_even_distribution(),
@@ -90,13 +90,13 @@ impl Creature {
     }
 
     pub fn step(&mut self, plants: &[Plant]) {
-        if self.life > 0 {
+        if self.life > 0.0 {
             for plant in plants {
                 if plant.position == self.position {
-                    self.life = std::cmp::min(
-                        self.genome.eating_efficiency.get_value() as i32 + self.life,
-                        255,
-                    );
+                    self.life = self.genome.eating_efficiency.get_value() + self.life;
+                    if self.life > 255.0 {
+                        self.life = 255.0;
+                    }
                 }
             }
             let action = self.genome.behavior.action_pattern[self.program_counter];
@@ -143,7 +143,7 @@ impl Creature {
     fn age(&mut self) {
         let n = self.genome.aging_speed.get_value() as i32 + 1;
         if self.life < n {
-            self.life = 0;
+            self.life = 0.0;
             return;
         }
         self.life -= n;

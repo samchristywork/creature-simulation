@@ -91,7 +91,7 @@ impl World {
                 map.set_plant(plant.position);
             }
             for creature in &state.creatures {
-                map.set_creature(creature.position, creature.direction, creature.life);
+                map.set_creature(creature.position, creature.direction, creature.life as i32);
             }
             map.display();
         } else if mode == DisplayMode::TerminalDynamic {
@@ -111,7 +111,7 @@ impl World {
             loop {
                 let mut map = Map::new(self.width, self.height, self.name.to_string());
                 for creature in &states[frame_count].creatures {
-                    map.set_creature(creature.position, creature.direction, creature.life);
+                    map.set_creature(creature.position, creature.direction, creature.life as i32);
                 }
                 for plant in &states[frame_count].plants {
                     map.set_plant(plant.position);
