@@ -56,7 +56,7 @@ impl Creature {
             life: 255,
             position: Position::new(x, y),
             direction,
-            genome: Genome::new(),
+            genome: Genome::new_even_distribution(),
             program_counter: 0,
             world_bounds,
         }
@@ -93,7 +93,10 @@ impl Creature {
         if self.life > 0 {
             for plant in plants {
                 if plant.position == self.position {
-                    self.life = 255;
+                    self.life = std::cmp::min(
+                        self.genome.eating_efficiency.get_value() as i32 + self.life,
+                        255,
+                    );
                 }
             }
             let action = self.genome.behavior.action_pattern[self.program_counter];
@@ -138,7 +141,7 @@ impl Creature {
     }
 
     fn age(&mut self) {
-        let n = self.genome.aging_speed;
+        let n = self.genome.aging_speed.get_value() as i32 + 1;
         if self.life < n {
             self.life = 0;
             return;

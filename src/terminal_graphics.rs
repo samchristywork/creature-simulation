@@ -4,7 +4,6 @@ use crossterm::event::{self, Event, KeyCode};
 use std::time::Duration;
 use tui::{
     backend::Backend,
-    style::Modifier,
     text::Spans,
     widgets::{Paragraph, Wrap},
 };

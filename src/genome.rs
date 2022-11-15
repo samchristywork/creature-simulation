@@ -1,6 +1,5 @@
 use crate::creature::Action;
 use rand::seq::SliceRandom;
-use rand::Rng;
 
 #[derive(Clone, Copy)]
 pub struct Behavior {
@@ -17,17 +16,32 @@ impl Behavior {
 }
 
 #[derive(Clone, Copy)]
+pub struct Trait {
+    value: i32,
+    weight: f64,
+}
+
+impl Trait {
+    fn new(value: i32, weight: f64) -> Self {
+        Self { value, weight }
+    }
+    pub fn get_value(&self) -> f64 {
+        self.value as f64 * self.weight
+    }
+}
+
+#[derive(Clone, Copy)]
 pub struct Genome {
-    pub aging_speed: i32,
-    pub eating_efficiency: f32,
+    pub aging_speed: Trait,
+    pub eating_efficiency: Trait,
     pub behavior: Behavior,
 }
 
 impl Genome {
-    pub fn new() -> Self {
+    pub fn new_even_distribution() -> Self {
         Self {
-            aging_speed: rand::thread_rng().gen_range(1..4),
-            eating_efficiency: 1.0,
+            aging_speed: Trait::new(5, 0.2),
+            eating_efficiency: Trait::new(5, 50.0),
             behavior: Behavior::new(),
         }
     }
