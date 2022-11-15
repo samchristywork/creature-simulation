@@ -121,15 +121,20 @@ pub fn display<B: Backend>(
     if crossterm::event::poll(frame_delay).unwrap() {
         if let Event::Key(key) = event::read().unwrap() {
             match key.code {
-                KeyCode::Esc => return Interaction::Halt,
-                KeyCode::Char('p') => return Interaction::Pause,
                 KeyCode::Char(' ') => return Interaction::Pause,
                 KeyCode::Char(',') => return Interaction::Back,
                 KeyCode::Char('.') => return Interaction::Forward,
-                KeyCode::Up => return Interaction::Up,
+                KeyCode::Char('h') => return Interaction::Left,
+                KeyCode::Char('j') => return Interaction::Down,
+                KeyCode::Char('k') => return Interaction::Up,
+                KeyCode::Char('l') => return Interaction::Right,
+                KeyCode::Char('p') => return Interaction::Pause,
+                KeyCode::Char('q') => return Interaction::Halt,
                 KeyCode::Down => return Interaction::Down,
+                KeyCode::Esc => return Interaction::Halt,
                 KeyCode::Left => return Interaction::Left,
                 KeyCode::Right => return Interaction::Right,
+                KeyCode::Up => return Interaction::Up,
                 key => println!("Not handled: {:?}", key),
             }
         }
