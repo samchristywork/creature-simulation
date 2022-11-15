@@ -141,7 +141,7 @@ impl Creature {
     }
 
     fn age(&mut self) {
-        let n = self.genome.aging_speed.get_value() as i32 + 1;
+        let n = 1.0 / self.genome.aging_speed_divisor.get_value() + 1.0;
         if self.life < n {
             self.life = 0.0;
             return;

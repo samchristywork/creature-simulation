@@ -32,7 +32,7 @@ impl Trait {
 
 #[derive(Clone, Copy)]
 pub struct Genome {
-    pub aging_speed: Trait,
+    pub aging_speed_divisor: Trait,
     pub eating_efficiency: Trait,
     pub behavior: Behavior,
 }
@@ -40,7 +40,7 @@ pub struct Genome {
 impl Genome {
     pub fn new_even_distribution() -> Self {
         Self {
-            aging_speed: Trait::new(5, 0.2),
+            aging_speed_divisor: Trait::new(5, 0.2),
             eating_efficiency: Trait::new(5, 50.0),
             behavior: Behavior::new(),
         }
