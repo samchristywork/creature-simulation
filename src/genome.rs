@@ -1,9 +1,25 @@
 use crate::creature::Action;
 use rand::seq::SliceRandom;
+use std::fmt;
 
 #[derive(Clone, Copy)]
 pub struct Behavior {
-    pub action_pattern: [Action; 10],
+    pub action_pattern: [Action; 5],
+}
+
+impl fmt::Display for Behavior {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut res = String::new();
+        for action in self.action_pattern {
+            res += match action {
+                Action::MoveForward => "F",
+                Action::TurnLeft => "L",
+                Action::TurnRight => "R",
+                Action::TurnRandom => "A",
+            }
+        }
+        write!(f, "{}", res)
+    }
 }
 
 impl Behavior {
@@ -35,6 +51,12 @@ pub struct Genome {
     pub aging_speed_divisor: Trait,
     pub eating_efficiency: Trait,
     pub behavior: Behavior,
+}
+
+impl fmt::Display for Genome {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.behavior)
+    }
 }
 
 impl Genome {

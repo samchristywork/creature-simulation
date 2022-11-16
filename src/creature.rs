@@ -68,7 +68,13 @@ fn string_from_array(string: [char; 15]) -> String {
 
 impl fmt::Display for Creature {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}: {}", string_from_array(self.name).trim(), self.life)
+        write!(
+            f,
+            "{2} {1} {0}",
+            string_from_array(self.name).trim(),
+            self.life,
+            self.genome
+        )
     }
 }
 
