@@ -59,7 +59,7 @@ impl World {
         }
     }
 
-    pub fn add_creature(&mut self, name: String) {
+    pub fn add_creature(&mut self, name: &str) {
         let creature = Creature::new(
             self.width / 2,
             self.height / 2,

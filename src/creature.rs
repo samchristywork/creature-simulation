@@ -68,12 +68,12 @@ fn string_from_array(string: [char; 15]) -> String {
 
 impl fmt::Display for Creature {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}: {}", string_from_array(self.name), self.life)
+        write!(f, "{}: {}", string_from_array(self.name).trim(), self.life)
     }
 }
 
 impl Creature {
-    pub fn new(x: i32, y: i32, world_bounds: Position, name: String) -> Self {
+    pub fn new(x: i32, y: i32, world_bounds: Position, name: &str) -> Self {
         let directions = vec![
             Direction::North,
             Direction::South,
@@ -82,7 +82,7 @@ impl Creature {
         ];
         let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
         Self {
-            name: array_from_str(name.as_str()),
+            name: array_from_str(name),
             life: 255.0,
             position: Position::new(x, y),
             direction,
