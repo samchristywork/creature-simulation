@@ -6,6 +6,13 @@ pub mod position;
 pub mod terminal_graphics;
 pub mod world;
 
+// Log types are error, warn, info, debug, and trace.
+
+use log::{info, LevelFilter};
+use log4rs::{
+    append::file::FileAppender,
+    config::{Appender, Config, Root},
+};
 use rand::seq::SliceRandom;
 use std::time::Duration;
 
@@ -16,6 +23,23 @@ pub enum DisplayMode {
 }
 
 fn main() {
+    let logfile = FileAppender::builder()
+        .build("/tmp/creature_simulation.log")
+        .unwrap();
+
+    let config = Config::builder()
+        .appender(Appender::builder().build("logfile", Box::new(logfile)))
+        .build(
+            Root::builder()
+                .appender("logfile")
+                .build(LevelFilter::Trace),
+        )
+        .unwrap();
+
+    log4rs::init_config(config).unwrap();
+
+    info!("Simulation has started.");
+
     let data = String::from_utf8_lossy(include_bytes!("names.in"));
     let names: Vec<&str> = data.split('\n').collect();
 
