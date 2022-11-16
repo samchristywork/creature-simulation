@@ -15,8 +15,13 @@ pub enum DisplayMode {
 }
 
 fn main() {
+    let data = String::from_utf8_lossy(include_bytes!("names.in"));
+    let mut names = data.split('\n');
+
     let mut world = world::World::new(80, 30, "World".to_string());
-    world.add_creatures(100);
+    for _ in 0..100 {
+        world.add_creature(names.next().unwrap().to_string());
+    }
     world.add_plants(100);
 
     world.simulate(1000);
@@ -25,4 +30,10 @@ fn main() {
         &world.history[0..],
         Duration::from_millis(100),
     );
+
+    let mut maxlen = 0;
+    for name in names {
+        maxlen = std::cmp::max(maxlen, name.len());
+    }
+    println!("hi {}", maxlen);
 }

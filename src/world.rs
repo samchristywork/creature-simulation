@@ -59,15 +59,14 @@ impl World {
         }
     }
 
-    pub fn add_creatures(&mut self, n: i32) {
-        for _ in 0..n {
-            let creature = Creature::new(
-                self.width / 2,
-                self.height / 2,
-                Position::new(self.width, self.height),
-            );
-            self.current_state.creatures.push(creature);
-        }
+    pub fn add_creature(&mut self, name: String) {
+        let creature = Creature::new(
+            self.width / 2,
+            self.height / 2,
+            Position::new(self.width, self.height),
+            name,
+        );
+        self.current_state.creatures.push(creature);
     }
 
     pub fn add_plants(&mut self, n: i32) {

@@ -36,6 +36,7 @@ pub enum Direction {
 
 #[derive(Clone, Copy)]
 pub struct Creature {
+    name: [char; 15],
     pub life: f64,
     pub direction: Direction,
     pub position: Position,
@@ -44,14 +45,35 @@ pub struct Creature {
     pub world_bounds: Position,
 }
 
+fn array_from_str(string: &str) -> [char; 15] {
+    let mut ret: [char; 15] = [' '; 15];
+    let bytes = string.as_bytes();
+    for i in 0..15 {
+        if i < bytes.len() {
+            ret[i] = bytes[i] as char;
+        } else {
+            ret[i] = ' ';
+        }
+    }
+    ret
+}
+
+fn string_from_array(string: [char; 15]) -> String {
+    let mut ret = String::new();
+    for i in 0..15 {
+        ret += string[i].to_string().as_str();
+    }
+    ret
+}
+
 impl fmt::Display for Creature {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.life)
+        write!(f, "{}: {}", string_from_array(self.name), self.life)
     }
 }
 
 impl Creature {
-    pub fn new(x: i32, y: i32, world_bounds: Position) -> Self {
+    pub fn new(x: i32, y: i32, world_bounds: Position, name: String) -> Self {
         let directions = vec![
             Direction::North,
             Direction::South,
@@ -60,6 +82,7 @@ impl Creature {
         ];
         let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
         Self {
+            name: array_from_str(name.as_str()),
             life: 255.0,
             position: Position::new(x, y),
             direction,
