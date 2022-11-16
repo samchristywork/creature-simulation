@@ -92,7 +92,15 @@ pub fn display<B: Backend>(
                         ctx.print(
                             cursor.x as f64,
                             cursor.y as f64,
-                            Span::styled(format!("X"), Style::default().fg(Color::Yellow)),
+                            Span::styled(
+                                format!(
+                                    "{}",
+                                    world_state
+                                        .get_creatures_at(Position::new(cursor.x, cursor.y))
+                                        .len()
+                                ),
+                                Style::default().fg(Color::Yellow),
+                            ),
                         );
                     }
                 })
