@@ -1,5 +1,6 @@
 use crate::map;
-
+use crate::position::Position;
+use crate::world;
 use crossterm::event::{self, Event, KeyCode};
 use std::time::Duration;
 use tui::{
@@ -40,6 +41,7 @@ pub fn display<B: Backend>(
     frame_count: usize,
     frame_delay: Duration,
     cursor: &Cursor,
+    world_state: &world::WorldState,
 ) -> Interaction {
     terminal
         .draw(|f| {
@@ -101,10 +103,10 @@ pub fn display<B: Backend>(
             size.height = std::cmp::min(map.height as u16, size.height);
             f.render_widget(canvas, size);
 
-            let text = vec![
-                Spans::from(format!("{}", cursor.x)),
-                Spans::from(format!("{}", cursor.y)),
-            ];
+            let mut text = Vec::new();
+            for creature in world_state.get_creatures_at(Position::new(cursor.x, cursor.y)) {
+                text.push(Spans::from(format!("{}", creature)))
+            }
             let p = Paragraph::new(text)
                 .block(Block::default().title("Info").borders(Borders::ALL))
                 .wrap(Wrap { trim: true });

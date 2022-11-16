@@ -3,6 +3,7 @@ use crate::plant::Plant;
 use crate::position::Position;
 use rand::seq::SliceRandom;
 use rand::Rng;
+use std::fmt;
 use std::slice::Iter;
 
 #[derive(Clone, Copy, Debug)]
@@ -41,6 +42,12 @@ pub struct Creature {
     genome: Genome,
     program_counter: usize,
     pub world_bounds: Position,
+}
+
+impl fmt::Display for Creature {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.life)
+    }
 }
 
 impl Creature {

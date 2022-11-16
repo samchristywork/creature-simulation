@@ -29,6 +29,15 @@ impl WorldState {
             plants: Vec::new(),
         }
     }
+    pub fn get_creatures_at(&self, position: Position) -> Vec<&Creature> {
+        let mut creatures = Vec::new();
+        for creature in &self.creatures {
+            if creature.position == position {
+                creatures.push(creature);
+            }
+        }
+        creatures
+    }
 }
 
 pub struct World {
@@ -123,6 +132,7 @@ impl World {
                     frame_count,
                     frame_delay,
                     &cursor,
+                    &states[frame_count],
                 ) {
                     Interaction::Halt => break,
                     Interaction::Progress => {
