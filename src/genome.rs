@@ -25,8 +25,8 @@ impl fmt::Display for Behavior {
 impl Behavior {
     fn new() -> Self {
         let actions = Action::iterator().as_slice();
-        let action_pattern: [Action; 10] =
-            [1; 10].map(|_| *actions.choose(&mut rand::thread_rng()).unwrap());
+        let action_pattern: [Action; 5] =
+            [1; 5].map(|_| *actions.choose(&mut rand::thread_rng()).unwrap());
         Self { action_pattern }
     }
 }

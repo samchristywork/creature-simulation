@@ -143,7 +143,7 @@ impl Creature {
                 Action::TurnRight => self.turn_right(),
             }
             self.program_counter += 1;
-            if self.program_counter > 9 {
+            if self.program_counter > 4 {
                 self.program_counter = 0;
             }
             self.age();
