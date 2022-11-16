@@ -14,7 +14,6 @@ use log4rs::{
     config::{Appender, Config, Root},
 };
 use rand::seq::SliceRandom;
-use std::time::Duration;
 
 #[derive(PartialEq)]
 pub enum DisplayMode {
@@ -50,9 +49,5 @@ fn main() {
     world.add_plants(100);
 
     world.simulate(1000);
-    world.display_map(
-        DisplayMode::TerminalDynamic,
-        &world.history[0..],
-        Duration::from_millis(100),
-    );
+    world.display_map(DisplayMode::TerminalDynamic, &world.history[0..], 100);
 }

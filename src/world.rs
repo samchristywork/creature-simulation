@@ -11,7 +11,6 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::io;
-use std::time::Duration;
 use tui::{backend::CrosstermBackend, Terminal};
 
 use rand::Rng;
@@ -91,7 +90,7 @@ impl World {
         }
     }
 
-    pub fn display_map(&self, mode: DisplayMode, states: &[WorldState], frame_delay: Duration) {
+    pub fn display_map(&self, mode: DisplayMode, states: &[WorldState], mut frame_delay: u64) {
         if mode == DisplayMode::TerminalStatic {
             let state = &states[states.len() - 1];
             let mut map = Map::new(self.width, self.height, self.name.to_string());
@@ -161,6 +160,14 @@ impl World {
                     }
                     Interaction::Right => {
                         cursor.x += 1;
+                    }
+                    Interaction::SpeedUp => {
+                        frame_delay -= 10;
+                        frame_delay = std::cmp::max(frame_delay, 10);
+                    }
+                    Interaction::SlowDown => {
+                        frame_delay += 10;
+                        frame_delay = std::cmp::min(frame_delay, 1000);
                     }
                 }
                 if frame_count == states.len() {

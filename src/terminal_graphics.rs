@@ -26,6 +26,8 @@ pub enum Interaction {
     Pause,
     Progress,
     Right,
+    SlowDown,
+    SpeedUp,
     Up,
 }
 
@@ -39,7 +41,7 @@ pub fn display<B: Backend>(
     terminal: &mut Terminal<B>,
     map: &map::Map,
     frame_count: usize,
-    frame_delay: Duration,
+    frame_delay: u64,
     cursor: &Cursor,
     world_state: &world::WorldState,
 ) -> Interaction {
@@ -84,7 +86,7 @@ pub fn display<B: Backend>(
                         0 as f64,
                         0 as f64,
                         Span::styled(
-                            format!("{}", frame_count),
+                            format!("{} ({})", frame_count, frame_delay),
                             Style::default().fg(Color::Magenta),
                         ),
                     );
@@ -128,7 +130,7 @@ pub fn display<B: Backend>(
         })
         .unwrap();
 
-    if crossterm::event::poll(frame_delay).unwrap() {
+    if crossterm::event::poll(Duration::from_millis(frame_delay)).unwrap() {
         if let Event::Key(key) = event::read().unwrap() {
             match key.code {
                 KeyCode::Char(' ') => return Interaction::Pause,
@@ -140,6 +142,8 @@ pub fn display<B: Backend>(
                 KeyCode::Char('l') => return Interaction::Right,
                 KeyCode::Char('p') => return Interaction::Pause,
                 KeyCode::Char('q') => return Interaction::Halt,
+                KeyCode::Char('[') => return Interaction::SpeedUp,
+                KeyCode::Char(']') => return Interaction::SlowDown,
                 KeyCode::Down => return Interaction::Down,
                 KeyCode::Esc => return Interaction::Halt,
                 KeyCode::Left => return Interaction::Left,
