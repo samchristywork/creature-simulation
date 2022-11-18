@@ -1,0 +1,7 @@
+appenders:
+  file:
+    kind: file
+    path: "log/requests.log"
+root:
+  appenders:
+    - file

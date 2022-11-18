@@ -8,11 +8,7 @@ pub mod world;
 
 // Log types are error, warn, info, debug, and trace.
 
-use log::{info, LevelFilter};
-use log4rs::{
-    append::file::FileAppender,
-    config::{Appender, Config, Root},
-};
+use log::info;
 use rand::seq::SliceRandom;
 
 #[derive(PartialEq)]
@@ -22,20 +18,7 @@ pub enum DisplayMode {
 }
 
 fn main() {
-    let logfile = FileAppender::builder()
-        .build("/tmp/creature_simulation.log")
-        .unwrap();
-
-    let config = Config::builder()
-        .appender(Appender::builder().build("logfile", Box::new(logfile)))
-        .build(
-            Root::builder()
-                .appender("logfile")
-                .build(LevelFilter::Trace),
-        )
-        .unwrap();
-
-    log4rs::init_config(config).unwrap();
+    log4rs::init_file("src/log4rs.yaml", Default::default()).unwrap();
 
     info!("Simulation has started.");
 
