@@ -41,6 +41,7 @@ impl Trait {
     fn new(value: i32, weight: f64) -> Self {
         Self { value, weight }
     }
+
     pub fn get_value(&self) -> f64 {
         self.value as f64 * self.weight
     }

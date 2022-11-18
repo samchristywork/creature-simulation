@@ -125,8 +125,16 @@ impl Creature {
         }
     }
 
-    pub fn step(&mut self, plants: &[Plant]) {
+    pub fn is_alive(&self) -> bool {
         if self.life > 0.0 {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn step(&mut self, plants: &[Plant]) {
+        if self.is_alive() {
             for plant in plants {
                 if plant.position == self.position {
                     self.life = self.genome.eating_efficiency.get_value() + self.life;

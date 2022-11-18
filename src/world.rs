@@ -28,6 +28,7 @@ impl WorldState {
             plants: Vec::new(),
         }
     }
+
     pub fn get_creatures_at(&self, position: Position) -> Vec<&Creature> {
         let mut creatures = Vec::new();
         for creature in &self.creatures {
