@@ -36,13 +36,16 @@ pub enum Direction {
 
 #[derive(Clone, Copy)]
 pub struct Creature {
-    name: [char; 15],
+    id: u64,
+    pub name: [char; 15],
     pub life: f64,
     pub direction: Direction,
     pub position: Position,
-    genome: Genome,
+    pub genome: Genome,
     program_counter: usize,
     pub world_bounds: Position,
+    generation: u64,
+    pub strain: u64,
 }
 
 fn array_from_str(string: &str) -> [char; 15] {
@@ -70,16 +73,25 @@ impl fmt::Display for Creature {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "{2} {1} {0}",
+            "{0}: {1} {2} {3} {4} {5}",
+            self.id,
+            self.strain,
             string_from_array(self.name).trim(),
             self.life,
-            self.genome
+            self.genome,
+            self.generation,
         )
     }
 }
 
 impl Creature {
-    pub fn new(x: i32, y: i32, world_bounds: Position, name: &str) -> Self {
+    pub fn new(
+        position: Position,
+        world_bounds: Position,
+        name: &str,
+        generation: u64,
+        id: u64,
+    ) -> Self {
         let directions = vec![
             Direction::North,
             Direction::South,
@@ -88,6 +100,7 @@ impl Creature {
         ];
         let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
         Self {
+            id,
             name: array_from_str(name),
             life: 255.0,
             position: Position::new(x, y),
@@ -95,6 +108,8 @@ impl Creature {
             genome: Genome::new_even_distribution(),
             program_counter: 0,
             world_bounds,
+            generation,
+            strain: id,
         }
     }
 

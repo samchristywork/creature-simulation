@@ -65,7 +65,10 @@ impl World {
             self.height / 2,
             Position::new(self.width, self.height),
             name,
+            1,
+            self.creature_count,
         );
+        self.creature_count += 1;
         self.current_state.creatures.push(creature);
     }
 
