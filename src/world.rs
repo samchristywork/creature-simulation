@@ -59,11 +59,10 @@ impl World {
         }
     }
 
-    pub fn add_creature(&mut self, name: &str) {
+    pub fn add_creature_with_position(&mut self, name: &str, position: Position) {
         let creature = Creature::new(
-            self.width / 2,
-            self.height / 2,
-            Position::new(self.width, self.height),
+            position,
+            Position::new(self.width as i32, self.height as i32),
             name,
             1,
             self.creature_count,
@@ -72,10 +71,17 @@ impl World {
         self.current_state.creatures.push(creature);
     }
 
+    pub fn add_creature(&mut self, name: &str) {
+        self.add_creature_with_position(
+            name,
+            Position::new(self.width as i32 / 2, self.height as i32 / 2),
+        );
+    }
+
     pub fn add_plants(&mut self, n: i32) {
         for _ in 0..n {
-            let x = rand::thread_rng().gen_range(0..self.width);
-            let y = rand::thread_rng().gen_range(0..self.height);
+            let x = rand::thread_rng().gen_range(0..self.width) as i32;
+            let y = rand::thread_rng().gen_range(0..self.height) as i32;
             let plant = Plant::new(Position::new(x, y));
             self.current_state.plants.push(plant);
         }

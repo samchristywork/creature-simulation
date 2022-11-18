@@ -8,6 +8,7 @@ pub mod world;
 
 // Log types are error, warn, info, debug, and trace.
 
+use crate::position::Position;
 use log::{info, LevelFilter};
 use log4rs::{
     append::file::FileAppender,

@@ -103,7 +103,7 @@ impl Creature {
             id,
             name: array_from_str(name),
             life: 255.0,
-            position: Position::new(x, y),
+            position,
             direction,
             genome: Genome::new_even_distribution(),
             program_counter: 0,
