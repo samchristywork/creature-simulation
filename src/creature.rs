@@ -207,4 +207,23 @@ impl Creature {
         }
         self.life -= n;
     }
+
+    pub fn divide(&mut self, id: u64) -> Self {
+        let mut offspring = Self {
+            id,
+            name: self.name,
+            life: 255.0,
+            position: Position::new(self.position.x, self.position.y),
+            direction: self.direction,
+            genome: self.genome,
+            program_counter: 0,
+            world_bounds: self.world_bounds,
+            generation: self.generation + 1,
+            strain: self.strain,
+        };
+
+        offspring.turn_right();
+
+        offspring
+    }
 }
