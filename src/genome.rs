@@ -68,7 +68,7 @@ impl Behavior {
 
 #[derive(Clone, Copy)]
 pub struct Trait {
-    value: i32,
+    pub value: i32,
     weight: f64,
 }
 
@@ -123,16 +123,14 @@ impl Genome {
 
     fn trait_modify(&mut self, t: &TraitSetType, n: i32) -> bool {
         match t {
-            TraitSetType::aging_speed_divisor => {
-                self.trait_set
-                    .aging_speed_divisor
-                    .set_value(self.trait_set.aging_speed_divisor.value + n)
-            }
-            TraitSetType::eating_efficiency => {
-                self.trait_set
-                    .eating_efficiency
-                    .set_value(self.trait_set.eating_efficiency.value + n)
-            }
+            TraitSetType::aging_speed_divisor => self
+                .trait_set
+                .aging_speed_divisor
+                .set_value(self.trait_set.aging_speed_divisor.value + n),
+            TraitSetType::eating_efficiency => self
+                .trait_set
+                .eating_efficiency
+                .set_value(self.trait_set.eating_efficiency.value + n),
         }
     }
 

@@ -61,7 +61,7 @@ fn array_from_str(string: &str) -> [char; 15] {
     ret
 }
 
-fn string_from_array(string: [char; 15]) -> String {
+pub fn string_from_array(string: [char; 15]) -> String {
     let mut ret = String::new();
     for i in 0..15 {
         ret += string[i].to_string().as_str();

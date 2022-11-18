@@ -43,8 +43,8 @@ fn main() {
     let data = String::from_utf8_lossy(include_bytes!("names.in"));
     let names: Vec<&str> = data.split('\n').collect();
 
-    let mut world = world::World::new(80, 30, "World".to_string());
-    for _ in 0..100 {
+    let mut world = world::World::new(80, 30, "World".to_string(), 100);
+    for _ in 0..30 {
         world.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
     }
     world.add_plants(100);
