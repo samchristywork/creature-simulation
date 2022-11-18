@@ -44,12 +44,12 @@ pub struct World {
     pub name: String,
     pub history: Vec<WorldState>,
     pub current_state: WorldState,
-    width: i32,
-    height: i32,
+    width: usize,
+    height: usize,
 }
 
 impl World {
-    pub fn new(width: i32, height: i32, name: String) -> Self {
+    pub fn new(width: usize, height: usize, name: String, carrying_capacity: usize) -> Self {
         Self {
             name,
             history: Vec::new(),
@@ -127,8 +127,8 @@ impl World {
             let mut is_paused = false;
             let mut cursor = Cursor {
                 show: true,
-                x: self.width / 2,
-                y: self.height / 2,
+                x: self.width as i32 / 2,
+                y: self.height as i32 / 2,
             };
             loop {
                 let mut map = Map::new(self.width, self.height, self.name.to_string());

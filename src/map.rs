@@ -3,14 +3,14 @@ use crate::position::Position;
 use colored::Colorize;
 
 pub struct Map {
-    pub width: i32,
-    pub height: i32,
+    pub width: usize,
+    pub height: usize,
     pub slots: Vec<Vec<(char, i32)>>,
     pub name: String,
 }
 
 impl Map {
-    pub fn new(width: i32, height: i32, name: String) -> Self {
+    pub fn new(width: usize, height: usize, name: String) -> Self {
         let slots = vec![vec![(' ', 0); width.try_into().unwrap()]; height.try_into().unwrap()];
         Self {
             width,
@@ -38,8 +38,8 @@ impl Map {
     }
 
     fn get_slot(&mut self, position: Position) -> (char, i32) {
-        if position.x >= 0 && position.x < self.width {
-            if position.y >= 0 && position.y < self.height {
+        if position.x >= 0 && position.x < self.width as i32 {
+            if position.y >= 0 && position.y < self.height as i32 {
                 return self.slots[position.y as usize][position.x as usize];
             }
         }
@@ -47,8 +47,8 @@ impl Map {
     }
 
     fn set_slot(&mut self, position: Position, character: char, life: i32) {
-        if position.x >= 0 && position.x < self.width {
-            if position.y >= 0 && position.y < self.height {
+        if position.x >= 0 && position.x < self.width as i32 {
+            if position.y >= 0 && position.y < self.height as i32 {
                 let curr = self.get_slot(position).1;
                 if life > curr {
                     self.slots[position.y as usize][position.x as usize] = (character, life);
