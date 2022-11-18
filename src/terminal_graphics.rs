@@ -51,8 +51,8 @@ pub fn display<B: Backend>(
     terminal
         .draw(|f| {
             let rect = Rect {
-                x: 0,
-                y: 0,
+                x: 2,
+                y: 2,
                 width: map.width as u16,
                 height: map.height as u16,
             };
@@ -86,8 +86,8 @@ pub fn display<B: Backend>(
                         }
                     }
                     ctx.print(
-                        0 as f64,
-                        0 as f64,
+                        4 as f64,
+                        2 as f64,
                         Span::styled(
                             format!(
                                 "{} ({}) {}",
