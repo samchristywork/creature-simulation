@@ -38,6 +38,16 @@ impl WorldState {
         }
         creatures
     }
+
+    pub fn num_alive(&self) -> usize {
+        let mut num = 0;
+        for creature in &self.creatures {
+            if creature.is_alive() {
+                num += 1;
+            }
+        }
+        num
+    }
 }
 
 pub struct World {
@@ -131,6 +141,7 @@ impl World {
 
             let mut frame_count = 0;
             let mut is_paused = false;
+            let mut show_dead = false;
             let mut cursor = Cursor {
                 show: true,
                 x: self.width as i32 / 2,
@@ -152,6 +163,7 @@ impl World {
                     frame_delay,
                     &cursor,
                     &states[frame_count],
+                    show_dead,
                 ) {
                     Interaction::Halt => break,
                     Interaction::Progress => {
@@ -161,6 +173,9 @@ impl World {
                     }
                     Interaction::Pause => {
                         is_paused = !is_paused;
+                    }
+                    Interaction::ToggleShowDead => {
+                        show_dead = !show_dead;
                     }
                     Interaction::Back => {
                         if frame_count > 0 {

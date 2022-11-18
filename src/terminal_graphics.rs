@@ -28,6 +28,7 @@ pub enum Interaction {
     Right,
     SlowDown,
     SpeedUp,
+    ToggleShowDead,
     Up,
 }
 
@@ -44,6 +45,7 @@ pub fn display<B: Backend>(
     frame_delay: u64,
     cursor: &Cursor,
     world_state: &world::WorldState,
+    show_dead: bool,
 ) -> Interaction {
     terminal
         .draw(|f| {
@@ -86,7 +88,12 @@ pub fn display<B: Backend>(
                         0 as f64,
                         0 as f64,
                         Span::styled(
-                            format!("{} ({})", frame_count, frame_delay),
+                            format!(
+                                "{} ({}) {}",
+                                frame_count,
+                                frame_delay,
+                                world_state.num_alive()
+                            ),
                             Style::default().fg(Color::Magenta),
                         ),
                     );
@@ -115,7 +122,9 @@ pub fn display<B: Backend>(
 
             let mut text = Vec::new();
             for creature in world_state.get_creatures_at(Position::new(cursor.x, cursor.y)) {
-                text.push(Spans::from(format!("{}", creature)))
+                if creature.is_alive() || show_dead {
+                    info_box_text.push(Spans::from(format!("{}", creature)))
+                }
             }
             let p = Paragraph::new(text)
                 .block(Block::default().title("Info").borders(Borders::ALL))
@@ -136,6 +145,7 @@ pub fn display<B: Backend>(
                 KeyCode::Char(' ') => return Interaction::Pause,
                 KeyCode::Char(',') => return Interaction::Back,
                 KeyCode::Char('.') => return Interaction::Forward,
+                KeyCode::Char('d') => return Interaction::ToggleShowDead,
                 KeyCode::Char('h') => return Interaction::Left,
                 KeyCode::Char('j') => return Interaction::Down,
                 KeyCode::Char('k') => return Interaction::Up,
