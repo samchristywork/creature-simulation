@@ -2,6 +2,41 @@ use crate::creature::Action;
 use rand::seq::SliceRandom;
 use std::fmt;
 
+macro_rules! record_field_names {
+    (
+        pub struct $struct_name:ident {
+            $(pub $key:ident : $type:ty),*
+        }) => {
+
+        #[derive(Clone, Copy)]
+        pub struct $struct_name {
+            $(pub $key : $type),*
+        }
+
+        #[derive(Debug)]
+        enum TraitSetType {
+            $(
+                #[allow(non_camel_case_types)]
+                $key
+                ),*
+        }
+
+        impl $struct_name {
+            #[allow(dead_code)]
+            fn get_fields() -> &'static [&'static str] {
+                static KEYS: &'static [&'static str] = &[$(stringify!($key)),*];
+                KEYS
+            }
+
+            fn get_random_enum() -> &'static TraitSetType {
+                [
+                    $(TraitSetType::$key),*
+                ].choose(&mut rand::thread_rng()).unwrap()
+            }
+        }
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct Behavior {
     pub action_pattern: [Action; 5],
