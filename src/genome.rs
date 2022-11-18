@@ -120,4 +120,34 @@ impl Genome {
             behavior: Behavior::new(),
         }
     }
+
+    fn trait_modify(&mut self, t: &TraitSetType, n: i32) -> bool {
+        match t {
+            TraitSetType::aging_speed_divisor => {
+                self.trait_set
+                    .aging_speed_divisor
+                    .set_value(self.trait_set.aging_speed_divisor.value + n)
+            }
+            TraitSetType::eating_efficiency => {
+                self.trait_set
+                    .eating_efficiency
+                    .set_value(self.trait_set.eating_efficiency.value + n)
+            }
+        }
+    }
+
+    /*
+     * This function only commits changes if both modifications succeed.
+     */
+    fn trait_modify_duo(&mut self, a: &TraitSetType, b: &TraitSetType) {
+        if self.trait_modify(a, -1) {
+            if !self.trait_modify(b, 1) {
+                self.trait_modify(a, 1);
+            }
+        }
+    }
+
+    pub fn mutate(&mut self) {
+        self.trait_modify_duo(TraitSet::get_random_enum(), TraitSet::get_random_enum());
+    }
 }
