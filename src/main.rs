@@ -11,7 +11,7 @@ pub mod world;
 use log::info;
 use rand::seq::SliceRandom;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq)]
 pub enum DisplayMode {
     TerminalStatic,
     TerminalDynamic,

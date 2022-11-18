@@ -63,8 +63,8 @@ fn array_from_str(string: &str) -> [char; 15] {
 
 pub fn string_from_array(string: [char; 15]) -> String {
     let mut ret = String::new();
-    for i in 0..15 {
-        ret += string[i].to_string().as_str();
+    for character in &string {
+        ret += character.to_string().as_str();
     }
     ret
 }
@@ -141,18 +141,14 @@ impl Creature {
     }
 
     pub fn is_alive(&self) -> bool {
-        if self.life > 0.0 {
-            true
-        } else {
-            false
-        }
+        self.life > 0.0
     }
 
     pub fn step(&mut self, plants: &[Plant]) {
         if self.is_alive() {
             for plant in plants {
                 if plant.position == self.position {
-                    self.life = self.genome.trait_set.eating_efficiency.get_value() + self.life;
+                    self.life += self.genome.trait_set.eating_efficiency.get_value();
                     if self.life > 255.0 {
                         self.life = 255.0;
                     }

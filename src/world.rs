@@ -15,7 +15,7 @@ use tui::{backend::CrosstermBackend, Terminal};
 
 use rand::Rng;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct WorldState {
     pub creatures: Vec<Creature>,
     pub plants: Vec<Plant>,
@@ -116,11 +116,9 @@ impl World {
         let mut new_children: Vec<Creature> = Vec::new();
 
         for creature in self.current_state.creatures.iter_mut() {
-            if creature.life > 100.0 {
-                if rand::thread_rng().gen_range(0..100) == 0 {
-                    new_children.push(creature.divide(self.creature_count));
-                    self.creature_count += 1;
-                }
+            if creature.life > 100.0 && rand::thread_rng().gen_range(0..100) == 0 {
+                new_children.push(creature.divide(self.creature_count));
+                self.creature_count += 1;
             }
         }
 

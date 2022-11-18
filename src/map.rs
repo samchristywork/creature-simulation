@@ -11,7 +11,7 @@ pub struct Map {
 
 impl Map {
     pub fn new(width: usize, height: usize, name: String) -> Self {
-        let slots = vec![vec![(' ', 0); width.try_into().unwrap()]; height.try_into().unwrap()];
+        let slots = vec![vec![(' ', 0); width]; height];
         Self {
             width,
             height,
@@ -38,21 +38,25 @@ impl Map {
     }
 
     fn get_slot(&mut self, position: Position) -> (char, i32) {
-        if position.x >= 0 && position.x < self.width as i32 {
-            if position.y >= 0 && position.y < self.height as i32 {
-                return self.slots[position.y as usize][position.x as usize];
-            }
+        if position.x >= 0
+            && position.x < self.width as i32
+            && position.y >= 0
+            && position.y < self.height as i32
+        {
+            return self.slots[position.y as usize][position.x as usize];
         }
         (' ', 0)
     }
 
     fn set_slot(&mut self, position: Position, character: char, life: i32) {
-        if position.x >= 0 && position.x < self.width as i32 {
-            if position.y >= 0 && position.y < self.height as i32 {
-                let curr = self.get_slot(position).1;
-                if life > curr {
-                    self.slots[position.y as usize][position.x as usize] = (character, life);
-                }
+        if position.x >= 0
+            && position.x < self.width as i32
+            && position.y >= 0
+            && position.y < self.height as i32
+        {
+            let curr = self.get_slot(position).1;
+            if life > curr {
+                self.slots[position.y as usize][position.x as usize] = (character, life);
             }
         }
     }

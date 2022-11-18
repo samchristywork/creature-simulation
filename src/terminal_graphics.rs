@@ -17,7 +17,7 @@ use tui::{
     Terminal,
 };
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq)]
 pub enum Interaction {
     Back,
     Down,
@@ -86,8 +86,8 @@ pub fn display<B: Backend>(
                         }
                     }
                     ctx.print(
-                        4 as f64,
-                        2 as f64,
+                        4.0,
+                        2.0,
                         Span::styled(
                             format!(
                                 "{} ({}) {}",
@@ -134,7 +134,7 @@ pub fn display<B: Backend>(
             let mut histogram: HashMap<u64, u64> = HashMap::new();
             for creature in &world_state.creatures {
                 if creature.is_alive() {
-                    if histogram.get(&creature.strain) == None {
+                    if histogram.get(&creature.strain).is_none() {
                         histogram.insert(creature.strain, 0);
                     }
                     let count = histogram.get(&creature.strain);
@@ -164,7 +164,7 @@ pub fn display<B: Backend>(
                 size.y = size.height;
                 size.height = 10;
                 size.x = 0;
-                size.width = size.width / 2;
+                size.width /= 2;
                 f.render_widget(info_box, size);
                 size.x = size.width;
                 f.render_widget(leaderboard, size);
@@ -196,5 +196,5 @@ pub fn display<B: Backend>(
             }
         }
     }
-    return Interaction::Progress;
+    Interaction::Progress
 }

@@ -82,12 +82,12 @@ impl Trait {
     }
 
     pub fn set_value(&mut self, value: i32) -> bool {
-        if value < 1 || value > 10 {
+        if !(1..=10).contains(&value) {
             return false;
         }
 
         self.value = value;
-        return true;
+        true
     }
 }
 
@@ -138,10 +138,8 @@ impl Genome {
      * This function only commits changes if both modifications succeed.
      */
     fn trait_modify_duo(&mut self, a: &TraitSetType, b: &TraitSetType) {
-        if self.trait_modify(a, -1) {
-            if !self.trait_modify(b, 1) {
-                self.trait_modify(a, 1);
-            }
+        if self.trait_modify(a, -1) && !self.trait_modify(b, 1) {
+            self.trait_modify(a, 1);
         }
     }
 
