@@ -2,6 +2,7 @@ use crate::map;
 use crate::position::Position;
 use crate::world;
 use crossterm::event::{self, Event, KeyCode};
+use std::collections::HashMap;
 use std::time::Duration;
 use tui::{
     backend::Backend,
@@ -120,21 +121,53 @@ pub fn display<B: Backend>(
             size.height = std::cmp::min(map.height as u16, size.height);
             f.render_widget(canvas, size);
 
-            let mut text = Vec::new();
+            let mut info_box_text = Vec::new();
             for creature in world_state.get_creatures_at(Position::new(cursor.x, cursor.y)) {
                 if creature.is_alive() || show_dead {
                     info_box_text.push(Spans::from(format!("{}", creature)))
                 }
             }
-            let p = Paragraph::new(text)
+            let info_box = Paragraph::new(info_box_text)
                 .block(Block::default().title("Info").borders(Borders::ALL))
+                .wrap(Wrap { trim: true });
+
+            let mut histogram: HashMap<u64, u64> = HashMap::new();
+            for creature in &world_state.creatures {
+                if creature.is_alive() {
+                    if histogram.get(&creature.strain) == None {
+                        histogram.insert(creature.strain, 0);
+                    }
+                    let count = histogram.get(&creature.strain);
+                    histogram.insert(creature.strain, count.unwrap() + 1);
+                }
+            }
+            let mut leaderboard_values = Vec::new();
+            for element in histogram {
+                leaderboard_values.push(element)
+            }
+            leaderboard_values.sort_by(|a, b| {
+                if a.1 == b.1 {
+                    b.0.partial_cmp(&a.0).unwrap()
+                } else {
+                    b.1.partial_cmp(&a.1).unwrap()
+                }
+            });
+            let mut leaderboard_text = Vec::new();
+            for element in leaderboard_values {
+                leaderboard_text.push(Spans::from(format!("{} {}", element.0, element.1)))
+            }
+            let leaderboard = Paragraph::new(leaderboard_text)
+                .block(Block::default().title("Leaderboard").borders(Borders::ALL))
                 .wrap(Wrap { trim: true });
 
             if f.size().height - size.height > 10 {
                 size.y = size.height;
                 size.height = 10;
                 size.x = 0;
-                f.render_widget(p, size);
+                size.width = size.width / 2;
+                f.render_widget(info_box, size);
+                size.x = size.width;
+                f.render_widget(leaderboard, size);
             }
         })
         .unwrap();
