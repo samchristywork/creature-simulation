@@ -54,8 +54,10 @@ pub struct World {
     pub name: String,
     pub history: Vec<WorldState>,
     pub current_state: WorldState,
+    carrying_capacity: usize,
     width: usize,
     height: usize,
+    creature_count: u64,
 }
 
 impl World {
@@ -64,8 +66,10 @@ impl World {
             name,
             history: Vec::new(),
             current_state: WorldState::new(),
+            carrying_capacity,
             width,
             height,
+            creature_count: 0,
         }
     }
 
@@ -117,6 +121,12 @@ impl World {
                     new_children.push(creature.divide(self.creature_count));
                     self.creature_count += 1;
                 }
+            }
+        }
+
+        if self.current_state.num_alive() < self.carrying_capacity {
+            for creature in new_children {
+                self.current_state.creatures.push(creature);
             }
         }
     }
