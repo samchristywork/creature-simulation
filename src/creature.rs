@@ -152,7 +152,7 @@ impl Creature {
         if self.is_alive() {
             for plant in plants {
                 if plant.position == self.position {
-                    self.life = self.genome.eating_efficiency.get_value() + self.life;
+                    self.life = self.genome.trait_set.eating_efficiency.get_value() + self.life;
                     if self.life > 255.0 {
                         self.life = 255.0;
                     }
@@ -200,7 +200,7 @@ impl Creature {
     }
 
     fn age(&mut self) {
-        let n = 1.0 / self.genome.aging_speed_divisor.get_value() + 1.0;
+        let n = 1.0 / self.genome.trait_set.aging_speed_divisor.get_value() + 1.0;
         if self.life < n {
             self.life = 0.0;
             return;

@@ -45,12 +45,27 @@ impl Trait {
     pub fn get_value(&self) -> f64 {
         self.value as f64 * self.weight
     }
+
+    pub fn set_value(&mut self, value: i32) -> bool {
+        if value < 1 || value > 10 {
+            return false;
+        }
+
+        self.value = value;
+        return true;
+    }
+}
+
+record_field_names! {
+pub struct TraitSet {
+    pub aging_speed_divisor: Trait,
+    pub eating_efficiency: Trait
+}
 }
 
 #[derive(Clone, Copy)]
 pub struct Genome {
-    pub aging_speed_divisor: Trait,
-    pub eating_efficiency: Trait,
+    pub trait_set: TraitSet,
     pub behavior: Behavior,
 }
 
@@ -63,8 +78,10 @@ impl fmt::Display for Genome {
 impl Genome {
     pub fn new_even_distribution() -> Self {
         Self {
-            aging_speed_divisor: Trait::new(5, 0.2),
-            eating_efficiency: Trait::new(5, 50.0),
+            trait_set: TraitSet {
+                aging_speed_divisor: Trait::new(5, 0.2),
+                eating_efficiency: Trait::new(5, 50.0),
+            },
             behavior: Behavior::new(),
         }
     }
