@@ -28,15 +28,23 @@ fn main() {
     for _ in 0..100 {
         world1.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
     }
-    world1.simulate(1000);
-    info!(
-        "{} creatures survived the generation.",
-        world1.current_state.num_alive()
-    );
+    for generation in 0..100 {
+        let mut world2 = world::World::new(80, 30, "World".to_string(), 100, false);
+        world2.add_creatures_from_world(world1);
+        world2.simulate(1000);
+        world1 = world2;
+
+        info!(
+            "{} creatures survived generation {}.",
+            world1.current_state.num_alive(),
+            generation
+        );
+    }
 
     let mut world2 = world::World::new(80, 30, "World".to_string(), 100, true);
     world2.add_creatures_from_world(world1);
     world2.simulate(1000);
+    world1 = world2;
 
-    world2.display_map(DisplayMode::TerminalDynamic, &world2.history[0..], 100);
+    world1.display_map(DisplayMode::TerminalDynamic, &world1.history[0..], 100);
 }
