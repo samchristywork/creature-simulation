@@ -101,6 +101,21 @@ impl World {
         );
     }
 
+    pub fn add_creatures_from_world(&mut self, world: World) {
+        for creature in world.current_state.creatures {
+            if creature.is_alive() {
+                let new_creature = Creature::new_from_old(
+                    creature,
+                    self.creature_count,
+                    Position::new(self.width as i32 / 2, self.height as i32 / 2),
+                    Position::new(self.width as i32, self.height as i32),
+                );
+                self.creature_count += 1;
+                self.current_state.creatures.push(new_creature);
+            }
+        }
+    }
+
     pub fn simulate(&mut self, n: i32) {
         for _ in 0..n {
             self.step();
@@ -115,20 +130,8 @@ impl World {
             creature.step(plant_is_here(creature.position));
         }
 
-        let mut new_children: Vec<Creature> = Vec::new();
 
-        for creature in self.current_state.creatures.iter_mut() {
-            if creature.life > 100.0 && rand::thread_rng().gen_range(0..100) == 0 {
-                new_children.push(creature.divide(self.creature_count));
-                self.creature_count += 1;
-            }
-        }
 
-        if self.current_state.num_alive() < self.carrying_capacity {
-            for creature in new_children {
-                self.current_state.creatures.push(creature);
-            }
-        }
     }
 
     pub fn display_map(&self, mode: DisplayMode, states: &[WorldState], mut frame_delay: u64) {

@@ -112,6 +112,33 @@ impl Creature {
         }
     }
 
+    pub fn new_from_old(
+        creature: Creature,
+        id: u64,
+        position: Position,
+        world_bounds: Position,
+    ) -> Self {
+        let directions = vec![
+            Direction::North,
+            Direction::South,
+            Direction::East,
+            Direction::West,
+        ];
+        let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
+        Self {
+            id,
+            name: creature.name,
+            life: 255.0,
+            position,
+            direction,
+            genome: creature.genome,
+            program_counter: 0,
+            world_bounds,
+            generation: creature.generation + 1,
+            strain: id,
+        }
+    }
+
     pub fn move_forward(&mut self) {
         match self.direction {
             Direction::North => self.move_relative(0, 1),

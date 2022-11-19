@@ -24,11 +24,15 @@ fn main() {
     let data = String::from_utf8_lossy(include_bytes!("names.in"));
     let names: Vec<&str> = data.split('\n').collect();
 
-    let mut world = world::World::new(80, 30, "World".to_string(), 100, true);
+    let mut world1 = world::World::new(80, 30, "World".to_string(), 100, false);
     for _ in 0..30 {
-        world.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
+        world1.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
     }
+    world1.simulate(1000);
 
-    world.simulate(1000);
-    world.display_map(DisplayMode::TerminalDynamic, &world.history[0..], 100);
+    let mut world2 = world::World::new(80, 30, "World".to_string(), 100, true);
+    world2.add_creatures_from_world(world1);
+    world2.simulate(1000);
+
+    world2.display_map(DisplayMode::TerminalDynamic, &world2.history[0..], 100);
 }
