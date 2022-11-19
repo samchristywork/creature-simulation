@@ -1,6 +1,5 @@
 use crate::creature::Creature;
 use crate::map::Map;
-use crate::plant::Plant;
 use crate::position::Position;
 use crate::terminal_graphics;
 use crate::terminal_graphics::Cursor;
@@ -15,17 +14,19 @@ use tui::{backend::CrosstermBackend, Terminal};
 
 use rand::Rng;
 
+pub fn plant_is_here(position: Position) -> bool {
+    (position.x + position.y) % 13 == 0
+}
+
 #[derive(Clone, Default)]
 pub struct WorldState {
     pub creatures: Vec<Creature>,
-    pub plants: Vec<Plant>,
 }
 
 impl WorldState {
     pub fn new() -> Self {
         Self {
             creatures: Vec::new(),
-            plants: Vec::new(),
         }
     }
 
@@ -92,15 +93,6 @@ impl World {
         );
     }
 
-    pub fn add_plants(&mut self, n: i32) {
-        for _ in 0..n {
-            let x = rand::thread_rng().gen_range(0..self.width) as i32;
-            let y = rand::thread_rng().gen_range(0..self.height) as i32;
-            let plant = Plant::new(Position::new(x, y));
-            self.current_state.plants.push(plant);
-        }
-    }
-
     pub fn simulate(&mut self, n: i32) {
         for _ in 0..n {
             self.step();
@@ -110,7 +102,7 @@ impl World {
     fn step(&mut self) {
         self.history.push(self.current_state.clone());
         for creature in self.current_state.creatures.iter_mut() {
-            creature.step(&self.current_state.plants);
+            creature.step(plant_is_here(creature.position));
         }
 
         let mut new_children: Vec<Creature> = Vec::new();
@@ -133,8 +125,13 @@ impl World {
         if mode == DisplayMode::TerminalStatic {
             let state = &states[states.len() - 1];
             let mut map = Map::new(self.width, self.height, self.name.to_string());
-            for plant in &state.plants {
-                map.set_plant(plant.position);
+            for x in 0..self.width {
+                for y in 0..self.height {
+                    let position = Position::new(x as i32, y as i32);
+                    if plant_is_here(position) {
+                        map.set_plant(position);
+                    }
+                }
             }
             for creature in &state.creatures {
                 map.set_creature(creature.position, creature.direction, creature.life as i32);
@@ -160,8 +157,13 @@ impl World {
                 for creature in &states[frame_count].creatures {
                     map.set_creature(creature.position, creature.direction, creature.life as i32);
                 }
-                for plant in &states[frame_count].plants {
-                    map.set_plant(plant.position);
+                for x in 0..self.width {
+                    for y in 0..self.height {
+                        let position = Position::new(x as i32, y as i32);
+                        if plant_is_here(position) {
+                            map.set_plant(position);
+                        }
+                    }
                 }
                 cursor.show = is_paused;
                 match terminal_graphics::display(

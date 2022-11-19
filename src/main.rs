@@ -1,7 +1,6 @@
 pub mod creature;
 pub mod genome;
 pub mod map;
-pub mod plant;
 pub mod position;
 pub mod terminal_graphics;
 pub mod world;
@@ -29,7 +28,6 @@ fn main() {
     for _ in 0..30 {
         world.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
     }
-    world.add_plants(100);
 
     world.simulate(1000);
     world.display_map(DisplayMode::TerminalDynamic, &world.history[0..], 100);

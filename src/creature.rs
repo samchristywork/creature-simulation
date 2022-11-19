@@ -1,5 +1,4 @@
 use crate::genome::Genome;
-use crate::plant::Plant;
 use crate::position::Position;
 use rand::seq::SliceRandom;
 use rand::Rng;
@@ -144,14 +143,12 @@ impl Creature {
         self.life > 0.0
     }
 
-    pub fn step(&mut self, plants: &[Plant]) {
+    pub fn step(&mut self, plant_is_here: bool) {
         if self.is_alive() {
-            for plant in plants {
-                if plant.position == self.position {
-                    self.life += self.genome.trait_set.eating_efficiency.get_value();
-                    if self.life > 255.0 {
-                        self.life = 255.0;
-                    }
+            if plant_is_here {
+                self.life += self.genome.trait_set.eating_efficiency.get_value();
+                if self.life > 255.0 {
+                    self.life = 255.0;
                 }
             }
             let action = self.genome.behavior.action_pattern[self.program_counter];
