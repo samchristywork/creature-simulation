@@ -59,10 +59,17 @@ pub struct World {
     width: usize,
     height: usize,
     creature_count: u64,
+    save_history: bool,
 }
 
 impl World {
-    pub fn new(width: usize, height: usize, name: String, carrying_capacity: usize) -> Self {
+    pub fn new(
+        width: usize,
+        height: usize,
+        name: String,
+        carrying_capacity: usize,
+        save_history: bool,
+    ) -> Self {
         Self {
             name,
             history: Vec::new(),
@@ -71,6 +78,7 @@ impl World {
             width,
             height,
             creature_count: 0,
+            save_history,
         }
     }
 
@@ -100,7 +108,9 @@ impl World {
     }
 
     fn step(&mut self) {
-        self.history.push(self.current_state.clone());
+        if self.save_history {
+            self.history.push(self.current_state.clone());
+        }
         for creature in self.current_state.creatures.iter_mut() {
             creature.step(plant_is_here(creature.position));
         }
