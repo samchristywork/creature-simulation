@@ -12,8 +12,6 @@ use crossterm::{
 use std::io;
 use tui::{backend::CrosstermBackend, Terminal};
 
-use rand::Rng;
-
 pub fn plant_is_here(position: Position) -> bool {
     (position.x + position.y) % 13 == 0
 }
@@ -58,7 +56,7 @@ pub struct World {
     carrying_capacity: usize,
     width: usize,
     height: usize,
-    creature_count: u64,
+    creature_count: usize,
     save_history: bool,
 }
 
@@ -88,7 +86,7 @@ impl World {
             Position::new(self.width as i32, self.height as i32),
             name,
             1,
-            self.creature_count,
+            self.creature_count as u64,
         );
         self.creature_count += 1;
         self.current_state.creatures.push(creature);
@@ -102,16 +100,24 @@ impl World {
     }
 
     pub fn add_creatures_from_world(&mut self, world: World) {
-        for creature in world.current_state.creatures {
-            if creature.is_alive() {
-                let new_creature = Creature::new_from_old(
-                    creature,
-                    self.creature_count,
-                    Position::new(self.width as i32 / 2, self.height as i32 / 2),
-                    Position::new(self.width as i32, self.height as i32),
-                );
-                self.creature_count += 1;
-                self.current_state.creatures.push(new_creature);
+        loop {
+            for creature in &world.current_state.creatures {
+                if creature.is_alive() {
+                    let new_creature = Creature::new_from_old(
+                        creature,
+                        self.creature_count as u64,
+                        Position::new(self.width as i32 / 2, self.height as i32 / 2),
+                        Position::new(self.width as i32, self.height as i32),
+                    );
+                    self.creature_count += 1;
+                    self.current_state.creatures.push(new_creature);
+                    if self.creature_count >= self.carrying_capacity {
+                        return;
+                    }
+                }
+            }
+            if self.creature_count == 0 {
+                return;
             }
         }
     }

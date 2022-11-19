@@ -25,10 +25,14 @@ fn main() {
     let names: Vec<&str> = data.split('\n').collect();
 
     let mut world1 = world::World::new(80, 30, "World".to_string(), 100, false);
-    for _ in 0..30 {
+    for _ in 0..100 {
         world1.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
     }
     world1.simulate(1000);
+    info!(
+        "{} creatures survived the generation.",
+        world1.current_state.num_alive()
+    );
 
     let mut world2 = world::World::new(80, 30, "World".to_string(), 100, true);
     world2.add_creatures_from_world(world1);

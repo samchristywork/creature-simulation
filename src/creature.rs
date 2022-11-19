@@ -113,7 +113,7 @@ impl Creature {
     }
 
     pub fn new_from_old(
-        creature: Creature,
+        creature: &Creature,
         id: u64,
         position: Position,
         world_bounds: Position,
