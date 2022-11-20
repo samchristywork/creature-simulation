@@ -13,7 +13,10 @@ use std::io;
 use tui::{backend::CrosstermBackend, Terminal};
 
 pub fn plant_is_here(position: Position) -> bool {
-    position.rand() % 40 == 0
+    position.rand() % 4 == 0
+        && position.dist(&Position::new(40, 15)) > 6.0
+        && position.x != 40
+        && position.y != 15
 }
 
 #[derive(Clone, Default)]
