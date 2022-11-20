@@ -21,7 +21,7 @@ fn main() {
 
     info!("Simulation has started.");
 
-    let data = String::from_utf8_lossy(include_bytes!("names.in"));
+    let data = String::from_utf8_lossy(include_bytes!("../resources/names.in"));
     let names: Vec<&str> = data.split('\n').collect();
     let carrying_capacity = 100;
     let generations = 100;
