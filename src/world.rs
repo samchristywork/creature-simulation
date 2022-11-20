@@ -13,7 +13,7 @@ use std::io;
 use tui::{backend::CrosstermBackend, Terminal};
 
 pub fn plant_is_here(position: Position) -> bool {
-    (position.x + position.y) % 13 == 0
+    position.rand() % 40 == 0
 }
 
 #[derive(Clone, Default)]
@@ -132,12 +132,10 @@ impl World {
         if self.save_history {
             self.history.push(self.current_state.clone());
         }
+
         for creature in self.current_state.creatures.iter_mut() {
             creature.step(plant_is_here(creature.position));
         }
-
-
-
     }
 
     pub fn display_map(&self, mode: DisplayMode, states: &[WorldState], mut frame_delay: u64) {
