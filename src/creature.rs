@@ -14,7 +14,7 @@ pub enum Action {
 }
 
 impl Action {
-    pub fn iterator() -> Iter<'static, Action> {
+    pub fn iterator() -> Iter<'static, Self> {
         static ACTION: [Action; 4] = [
             Action::MoveForward,
             Action::TurnLeft,
@@ -60,7 +60,7 @@ fn array_from_str(string: &str) -> [char; 15] {
     ret
 }
 
-pub fn string_from_array(string: [char; 15]) -> String {
+#[must_use] pub fn string_from_array(string: [char; 15]) -> String {
     let mut ret = String::new();
     for character in &string {
         ret += character.to_string().as_str();
@@ -84,7 +84,7 @@ impl fmt::Display for Creature {
 }
 
 impl Creature {
-    pub fn new(
+    #[must_use] pub fn new(
         position: Position,
         world_bounds: Position,
         name: &str,
@@ -112,8 +112,8 @@ impl Creature {
         }
     }
 
-    pub fn new_from_old(
-        creature: &Creature,
+    #[must_use] pub fn new_from_old(
+        creature: &Self,
         id: u64,
         position: Position,
         world_bounds: Position,
@@ -166,7 +166,7 @@ impl Creature {
         }
     }
 
-    pub fn is_alive(&self) -> bool {
+    #[must_use] pub fn is_alive(&self) -> bool {
         self.life > 0.0
     }
 

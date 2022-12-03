@@ -100,8 +100,8 @@ pub fn display<B: Backend>(
                     );
                     if cursor.show {
                         ctx.print(
-                            cursor.x as f64,
-                            cursor.y as f64,
+                            f64::from(cursor.x),
+                            f64::from(cursor.y),
                             Span::styled(
                                 format!(
                                     "{}",
@@ -114,8 +114,8 @@ pub fn display<B: Backend>(
                         );
                     }
                 })
-                .x_bounds([rect.x as f64, rect.width as f64])
-                .y_bounds([rect.y as f64, rect.height as f64]);
+                .x_bounds([f64::from(rect.x), f64::from(rect.width)])
+                .y_bounds([f64::from(rect.y), f64::from(rect.height)]);
             let mut size = f.size();
             size.width = std::cmp::min(map.width as u16, size.width);
             size.height = std::cmp::min(map.height as u16, size.height);

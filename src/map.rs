@@ -10,7 +10,7 @@ pub struct Map {
 }
 
 impl Map {
-    pub fn new(width: usize, height: usize, name: String) -> Self {
+    #[must_use] pub fn new(width: usize, height: usize, name: String) -> Self {
         let slots = vec![vec![(' ', 0); width]; height];
         Self {
             width,

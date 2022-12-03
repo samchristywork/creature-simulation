@@ -77,8 +77,8 @@ impl Trait {
         Self { value, weight }
     }
 
-    pub fn get_value(&self) -> f64 {
-        self.value as f64 * self.weight
+    #[must_use] pub fn get_value(&self) -> f64 {
+        f64::from(self.value) * self.weight
     }
 
     pub fn set_value(&mut self, value: i32) -> bool {
@@ -111,7 +111,7 @@ impl fmt::Display for Genome {
 }
 
 impl Genome {
-    pub fn new_even_distribution() -> Self {
+    #[must_use] pub fn new_even_distribution() -> Self {
         Self {
             trait_set: TraitSet {
                 aging_speed_divisor: Trait::new(5, 0.2),

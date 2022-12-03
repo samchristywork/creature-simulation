@@ -12,7 +12,7 @@ use crossterm::{
 use std::io;
 use tui::{backend::CrosstermBackend, Terminal};
 
-pub fn plant_is_here(position: Position) -> bool {
+#[must_use] pub fn plant_is_here(position: Position) -> bool {
     position.rand() % 4 == 0
         && position.dist(&Position::new(40, 15)) > 6.0
         && position.x != 40
@@ -25,13 +25,13 @@ pub struct WorldState {
 }
 
 impl WorldState {
-    pub fn new() -> Self {
+    #[must_use] pub fn new() -> Self {
         Self {
             creatures: Vec::new(),
         }
     }
 
-    pub fn get_creatures_at(&self, position: Position) -> Vec<&Creature> {
+    #[must_use] pub fn get_creatures_at(&self, position: Position) -> Vec<&Creature> {
         let mut creatures = Vec::new();
         for creature in &self.creatures {
             if creature.position == position {
@@ -41,7 +41,7 @@ impl WorldState {
         creatures
     }
 
-    pub fn num_alive(&self) -> usize {
+    #[must_use] pub fn num_alive(&self) -> usize {
         let mut num = 0;
         for creature in &self.creatures {
             if creature.is_alive() {
@@ -64,7 +64,7 @@ pub struct World {
 }
 
 impl World {
-    pub fn new(
+    #[must_use] pub fn new(
         width: usize,
         height: usize,
         name: String,
@@ -102,7 +102,7 @@ impl World {
         );
     }
 
-    pub fn add_creatures_from_world(&mut self, world: World) {
+    pub fn add_creatures_from_world(&mut self, world: Self) {
         loop {
             for creature in &world.current_state.creatures {
                 if creature.is_alive() {
@@ -136,7 +136,7 @@ impl World {
             self.history.push(self.current_state.clone());
         }
 
-        for creature in self.current_state.creatures.iter_mut() {
+        for creature in &mut self.current_state.creatures {
             creature.step(plant_is_here(creature.position));
         }
     }
@@ -208,9 +208,7 @@ impl World {
                         show_dead = !show_dead;
                     }
                     Interaction::Back => {
-                        if frame_count > 0 {
-                            frame_count -= 1;
-                        }
+                        frame_count = frame_count.saturating_sub(1);
                     }
                     Interaction::Forward => {
                         frame_count += 1;

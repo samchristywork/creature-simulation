@@ -20,7 +20,7 @@ impl Sub for Position {
 }
 
 impl Position {
-    pub fn new(x: i32, y: i32) -> Self {
+    #[must_use] pub fn new(x: i32, y: i32) -> Self {
         Self { x, y }
     }
 
@@ -28,17 +28,17 @@ impl Position {
         println!("{} {}", self.x, self.y);
     }
 
-    pub fn rand(&self) -> u64 {
+    #[must_use] pub fn rand(&self) -> u64 {
         let mut hasher = DefaultHasher::new();
         self.hash(&mut hasher);
         hasher.finish()
     }
 
     fn length(&self) -> f64 {
-        (self.x as f64 * self.x as f64 + self.y as f64 * self.y as f64).sqrt()
+        f64::from(self.x).mul_add(f64::from(self.x), f64::from(self.y) * f64::from(self.y)).sqrt()
     }
 
-    pub fn dist(&self, position: &Position) -> f64 {
+    #[must_use] pub fn dist(&self, position: &Self) -> f64 {
         let diff = *position - *self;
         diff.length()
     }
