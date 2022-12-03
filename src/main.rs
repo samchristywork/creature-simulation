@@ -17,7 +17,8 @@ pub enum DisplayMode {
 }
 
 fn main() {
-    log4rs::init_file("src/log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file("src/log4rs.yaml", Default::default())
+        .expect("Could not open src/log4rs.yaml.");
 
     info!("Simulation has started.");
 
@@ -29,7 +30,11 @@ fn main() {
 
     let mut world1 = world::World::new(80, 30, "World".to_string(), carrying_capacity, false);
     for _ in 0..carrying_capacity {
-        world1.add_creature(names.choose(&mut rand::thread_rng()).unwrap());
+        world1.add_creature(
+            names
+                .choose(&mut rand::thread_rng())
+                .expect("Could not add creature."),
+        );
     }
     for generation in 0..generations {
         let mut world2 = world::World::new(80, 30, "World".to_string(), carrying_capacity, false);

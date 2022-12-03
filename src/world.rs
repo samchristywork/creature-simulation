@@ -12,7 +12,8 @@ use crossterm::{
 use std::io;
 use tui::{backend::CrosstermBackend, Terminal};
 
-#[must_use] pub fn plant_is_here(position: Position) -> bool {
+#[must_use]
+pub fn plant_is_here(position: Position) -> bool {
     position.rand() % 4 == 0
         && position.dist(&Position::new(40, 15)) > 6.0
         && position.x != 40
@@ -25,13 +26,15 @@ pub struct WorldState {
 }
 
 impl WorldState {
-    #[must_use] pub fn new() -> Self {
+    #[must_use]
+    pub fn new() -> Self {
         Self {
             creatures: Vec::new(),
         }
     }
 
-    #[must_use] pub fn get_creatures_at(&self, position: Position) -> Vec<&Creature> {
+    #[must_use]
+    pub fn get_creatures_at(&self, position: Position) -> Vec<&Creature> {
         let mut creatures = Vec::new();
         for creature in &self.creatures {
             if creature.position == position {
@@ -41,7 +44,8 @@ impl WorldState {
         creatures
     }
 
-    #[must_use] pub fn num_alive(&self) -> usize {
+    #[must_use]
+    pub fn num_alive(&self) -> usize {
         let mut num = 0;
         for creature in &self.creatures {
             if creature.is_alive() {
@@ -64,7 +68,8 @@ pub struct World {
 }
 
 impl World {
-    #[must_use] pub fn new(
+    #[must_use]
+    pub fn new(
         width: usize,
         height: usize,
         name: String,
@@ -158,11 +163,12 @@ impl World {
             }
             map.display();
         } else if mode == DisplayMode::TerminalDynamic {
-            enable_raw_mode().unwrap();
+            enable_raw_mode().expect("Could not enable raw mode.");
             let mut stdout = io::stdout();
-            execute!(stdout, EnterAlternateScreen).unwrap();
+            execute!(stdout, EnterAlternateScreen).expect("Could not enter alternate screen.");
             let backend = CrosstermBackend::new(stdout);
-            let mut terminal = Terminal::new(backend).unwrap();
+            let mut terminal =
+                Terminal::new(backend).expect("Could not instantiate a new terminal.");
 
             let mut frame_count = 0;
             let mut is_paused = false;
@@ -239,9 +245,10 @@ impl World {
                 }
             }
 
-            disable_raw_mode().unwrap();
-            execute!(terminal.backend_mut(), LeaveAlternateScreen).unwrap();
-            terminal.show_cursor().unwrap();
+            disable_raw_mode().expect("Could not disable raw mode.");
+            execute!(terminal.backend_mut(), LeaveAlternateScreen)
+                .expect("Could not leave alternate screen.");
+            terminal.show_cursor().expect("Could not show cursor.");
         }
     }
 }

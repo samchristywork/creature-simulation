@@ -31,7 +31,7 @@ macro_rules! record_field_names {
             fn get_random_enum() -> &'static TraitSetType {
                 [
                     $(TraitSetType::$key),*
-                ].choose(&mut rand::thread_rng()).unwrap()
+                ].choose(&mut rand::thread_rng()).expect("Could not get random enum.")
             }
         }
     }
@@ -60,8 +60,11 @@ impl fmt::Display for Behavior {
 impl Behavior {
     fn new() -> Self {
         let actions = Action::iterator().as_slice();
-        let action_pattern: [Action; 5] =
-            [1; 5].map(|_| *actions.choose(&mut rand::thread_rng()).unwrap());
+        let action_pattern: [Action; 5] = [1; 5].map(|_| {
+            *actions
+                .choose(&mut rand::thread_rng())
+                .expect("Could not get random action.")
+        });
         Self { action_pattern }
     }
 }
@@ -77,7 +80,8 @@ impl Trait {
         Self { value, weight }
     }
 
-    #[must_use] pub fn get_value(&self) -> f64 {
+    #[must_use]
+    pub fn get_value(&self) -> f64 {
         f64::from(self.value) * self.weight
     }
 
@@ -111,7 +115,8 @@ impl fmt::Display for Genome {
 }
 
 impl Genome {
-    #[must_use] pub fn new_even_distribution() -> Self {
+    #[must_use]
+    pub fn new_even_distribution() -> Self {
         Self {
             trait_set: TraitSet {
                 aging_speed_divisor: Trait::new(5, 0.2),

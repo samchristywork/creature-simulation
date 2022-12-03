@@ -138,7 +138,10 @@ pub fn display<B: Backend>(
                         histogram.insert(creature.strain, 0);
                     }
                     let count = histogram.get(&creature.strain);
-                    histogram.insert(creature.strain, count.unwrap() + 1);
+                    histogram.insert(
+                        creature.strain,
+                        count.expect("Could not get strain count.") + 1,
+                    );
                 }
             }
             let mut leaderboard_values = Vec::new();
@@ -147,9 +150,11 @@ pub fn display<B: Backend>(
             }
             leaderboard_values.sort_by(|a, b| {
                 if a.1 == b.1 {
-                    b.0.partial_cmp(&a.0).unwrap()
+                    b.0.partial_cmp(&a.0)
+                        .expect("Could not perform comparison.")
                 } else {
-                    b.1.partial_cmp(&a.1).unwrap()
+                    b.1.partial_cmp(&a.1)
+                        .expect("Could not perform comparison.")
                 }
             });
             let mut leaderboard_text = Vec::new();
@@ -170,10 +175,10 @@ pub fn display<B: Backend>(
                 f.render_widget(leaderboard, size);
             }
         })
-        .unwrap();
+        .expect("Could not perform draw.");
 
-    if crossterm::event::poll(Duration::from_millis(frame_delay)).unwrap() {
-        if let Event::Key(key) = event::read().unwrap() {
+    if crossterm::event::poll(Duration::from_millis(frame_delay)).expect("Could not poll events.") {
+        if let Event::Key(key) = event::read().expect("Could not read key signature.") {
             match key.code {
                 KeyCode::Char(' ') => return Interaction::Pause,
                 KeyCode::Char(',') => return Interaction::Back,

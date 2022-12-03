@@ -60,7 +60,8 @@ fn array_from_str(string: &str) -> [char; 15] {
     ret
 }
 
-#[must_use] pub fn string_from_array(string: [char; 15]) -> String {
+#[must_use]
+pub fn string_from_array(string: [char; 15]) -> String {
     let mut ret = String::new();
     for character in &string {
         ret += character.to_string().as_str();
@@ -84,7 +85,8 @@ impl fmt::Display for Creature {
 }
 
 impl Creature {
-    #[must_use] pub fn new(
+    #[must_use]
+    pub fn new(
         position: Position,
         world_bounds: Position,
         name: &str,
@@ -97,7 +99,9 @@ impl Creature {
             Direction::East,
             Direction::West,
         ];
-        let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
+        let direction: Direction = *directions
+            .choose(&mut rand::thread_rng())
+            .expect("Could not select random direction.");
         Self {
             id,
             name: array_from_str(name),
@@ -112,7 +116,8 @@ impl Creature {
         }
     }
 
-    #[must_use] pub fn new_from_old(
+    #[must_use]
+    pub fn new_from_old(
         creature: &Self,
         id: u64,
         position: Position,
@@ -124,7 +129,9 @@ impl Creature {
             Direction::East,
             Direction::West,
         ];
-        let direction: Direction = *directions.choose(&mut rand::thread_rng()).unwrap();
+        let direction: Direction = *directions
+            .choose(&mut rand::thread_rng())
+            .expect("Could not select random direction.");
         Self {
             id,
             name: creature.name,
@@ -166,7 +173,8 @@ impl Creature {
         }
     }
 
-    #[must_use] pub fn is_alive(&self) -> bool {
+    #[must_use]
+    pub fn is_alive(&self) -> bool {
         self.life > 0.0
     }
 
