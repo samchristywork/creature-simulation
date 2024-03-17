@@ -1,4 +1,4 @@
-![Banner](https://s-christy.com/status-banner-service/creature-simulation/banner-slim.svg)
+![Banner](https://s-christy.com/sbs/status-banner.svg?icon=navigation/unfold_less&hue=50&title=Creature%20Simulation&description=An%20experiment%20in%20artificial%20life%20and%20evolution)
 
 ## Overview
 
